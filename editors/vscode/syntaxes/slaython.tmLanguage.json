@@ -1,0 +1,112 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Slaython",
+  "scopeName": "source.slaython",
+  "fileTypes": [
+    "slay"
+  ],
+  "patterns": [
+    {
+      "name": "comment.line.number-sign.slaython",
+      "match": "#.*$"
+    },
+    {
+      "name": "string.quoted.triple.slaython",
+      "begin": "(?i)\\b[rbuf]{0,2}\"\"\"",
+      "end": "\"\"\"",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.slaython"
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.triple.slaython",
+      "begin": "(?i)\\b[rbuf]{0,2}'''",
+      "end": "'''",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.slaython"
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.double.slaython",
+      "begin": "(?i)\\b[rbuf]{0,2}\"",
+      "end": "\"|$",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.slaython"
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.single.slaython",
+      "begin": "(?i)\\b[rbuf]{0,2}'",
+      "end": "'|$",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.slaython"
+        }
+      ]
+    },
+    {
+      "match": "\\b(cook)\\s+([A-Za-z_]\\w*)",
+      "captures": {
+        "1": {
+          "name": "storage.type.function.slaython"
+        },
+        "2": {
+          "name": "entity.name.function.slaython"
+        }
+      }
+    },
+    {
+      "match": "\\b(blueprint)\\s+([A-Za-z_]\\w*)",
+      "captures": {
+        "1": {
+          "name": "storage.type.class.slaython"
+        },
+        "2": {
+          "name": "entity.name.type.class.slaython"
+        }
+      }
+    },
+    {
+      "name": "constant.language.slaython",
+      "match": "(?<!\\.)\\b(ghosted|nocap|cap)\\b"
+    },
+    {
+      "name": "keyword.control.slaython",
+      "match": "(?<!\\.)\\b(doomscroll|ornah\\s+fr|crashout|anyways|periodt|mutuals|lockin|pullup|linkup|cancel|holdup|ornah|chill|serve|tryna|outta|viral|spill|drop|yeet|dip|ong|aka|pov|fr)\\b"
+    },
+    {
+      "name": "keyword.operator.logical.slaython",
+      "match": "(?<!\\.)\\b(orwhatever|literally|collab|canon|nah)\\b"
+    },
+    {
+      "name": "storage.type.slaython",
+      "match": "(?<!\\.)\\b(blueprint|lowkey|cook|npc)\\b"
+    },
+    {
+      "name": "support.function.builtin.slaython",
+      "match": "(?<!\\.)\\b(yap|hmu|og)\\b"
+    },
+    {
+      "name": "constant.numeric.slaython",
+      "match": "\\b(0[xX][0-9a-fA-F_]+|0[bB][01_]+|0[oO][0-7_]+|\\d[\\d_]*(\\.[\\d_]*)?([eE][+-]?\\d+)?j?)\\b"
+    },
+    {
+      "name": "variable.language.self.slaython",
+      "match": "\\b(self|cls)\\b"
+    },
+    {
+      "name": "entity.name.function.decorator.slaython",
+      "match": "^\\s*@[\\w.]+"
+    }
+  ]
+}

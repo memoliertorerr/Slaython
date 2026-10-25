@@ -1,0 +1,10 @@
+# FizzBuzz, but make it slay
+doomscroll n canon range(1, 31):
+    fr n % 15 == 0:
+        yap("FizzBuzz")
+    ornah fr n % 3 == 0:
+        yap("Fizz")
+    ornah fr n % 5 == 0:
+        yap("Buzz")
+    ornah:
+        yap(n)

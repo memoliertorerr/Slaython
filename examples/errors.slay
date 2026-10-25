@@ -1,0 +1,23 @@
+# tryna = try, crashout = except, periodt = finally, yeet = raise, ong = assert
+
+blueprint RatioError(Exception):
+    chill
+
+
+cook post(likes, replies):
+    fr replies > likes:
+        yeet RatioError(f"got ratioed: {replies} replies vs {likes} likes")
+    serve "W post"
+
+
+doomscroll likes, replies canon [(100, 3), (5, 80)]:
+    tryna:
+        yap(post(likes, replies))
+    crashout RatioError aka e:
+        yap("L:", e)
+    periodt:
+        yap("next post...")
+
+score = 10
+ong score > 0, "score can't be negative, that's cap"
+yap("ong check passed")

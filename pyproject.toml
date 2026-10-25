@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slaython"
+version = "0.1.0"
+description = "Python, but the keywords are gen-z slang. Fully interoperable with Python."
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["language", "transpiler", "slang", "gen-z", "esolang"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Interpreters",
+]
+
+[project.scripts]
+slaython = "slaython.cli:main"
+slay = "slaython.cli:main"
+
+[tool.setuptools]
+packages = ["slaython"]

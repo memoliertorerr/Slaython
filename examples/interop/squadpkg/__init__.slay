@@ -1,0 +1,5 @@
+# A Slaython package. Python can import it after `import slaython`.
+outta .ranking pullup rank
+
+__all__ = ["rank", "VERSION"]
+VERSION = "1.0"

@@ -1,0 +1,7 @@
+# Slaython importing a Python module and a Slaython package side by side.
+# Run: python -m slaython examples/interop/use_from_slaython.slay
+outta helpers pullup hype          # helpers.py (Python)
+outta squadpkg pullup rank         # squadpkg/ (Slaython)
+
+yap(hype("slaython"))
+yap(rank({"a": [1, 2], "b": [5, 5]}))

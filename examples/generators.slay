@@ -1,0 +1,20 @@
+# drop = yield, lockin = while, dip = break, anyways = continue
+
+cook feed():
+    n = 0
+    lockin nocap:
+        n += 1
+        drop f"post #{n}"
+
+
+cook doomscroll_session(limit):
+    doomscroll post canon feed():
+        fr post.endswith("3"):
+            anyways          # skip the boring one
+        yap("scrolling:", post)
+        fr post == f"post #{limit}":
+            dip              # touch grass
+    yap("ok that's enough screen time")
+
+
+doomscroll_session(5)

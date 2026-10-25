@@ -1,0 +1,34 @@
+{
+  "name": "slaython",
+  "displayName": "Slaython",
+  "description": "Syntax highlighting for Slaython (.slay), Python with gen-z slang keywords",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "slaython",
+        "aliases": [
+          "Slaython",
+          "slaython"
+        ],
+        "extensions": [
+          ".slay"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "slaython",
+        "scopeName": "source.slaython",
+        "path": "./syntaxes/slaython.tmLanguage.json"
+      }
+    ]
+  }
+}

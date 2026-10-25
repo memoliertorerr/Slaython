@@ -1,0 +1,30 @@
+# lowkey = async, holdup = await, spill = match, pov = case
+pullup asyncio
+
+
+lowkey cook fetch_vibe(user, delay):
+    holdup asyncio.sleep(delay)
+    serve {"user": user, "mood": ["ate", "mid", "cooked"][len(user) % 3]}
+
+
+cook react(result):
+    spill result:
+        pov {"mood": "ate"}:
+            serve "slay 💅"
+        pov {"mood": "mid"}:
+            serve "it's giving average"
+        pov {"mood": mood}:
+            serve f"oof, {mood}"
+
+
+lowkey cook main():
+    results = holdup asyncio.gather(
+        fetch_vibe("ava", 0.02),
+        fetch_vibe("leon", 0.01),
+        fetch_vibe("jo", 0.0),
+    )
+    doomscroll r canon results:
+        yap(r["user"], "->", react(r))
+
+
+asyncio.run(main())

@@ -1,0 +1,36 @@
+# blueprint = class, cook = def, serve = return, og() = super()
+
+blueprint Creator:
+    cook __init__(self, name, followers=0):
+        self.name = name
+        self.followers = followers
+
+    cook vibe(self):
+        fr self.followers > 1_000_000:
+            serve "main character energy"
+        ornah fr self.followers > 10_000:
+            serve "lowkey famous"
+        ornah:
+            serve "npc era"
+
+    cook __repr__(self):
+        serve f"{type(self).__name__}({self.name!r}, {self.followers:,})"
+
+
+blueprint Streamer(Creator):
+    cook __init__(self, name, followers, game):
+        og().__init__(name, followers)
+        self.game = game
+
+    cook vibe(self):
+        serve og().vibe() + f", streams {self.game}"
+
+
+squad = [
+    Creator("mia", 2_500_000),
+    Creator("jay", 40_000),
+    Streamer("kai", 900, "minecraft"),
+]
+
+doomscroll c canon sorted(squad, key=npc c: c.followers, reverse=nocap):
+    yap(c, "->", c.vibe())

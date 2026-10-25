@@ -1,0 +1,13 @@
+# A Slaython module that pulls up regular Python modules.
+outta statistics pullup mean
+pullup json
+
+
+cook rank(scores):
+    """Return names sorted by average score, best first."""
+    averages = {name: mean(vals) doomscroll name, vals canon scores.items()}
+    serve sorted(averages, key=averages.get, reverse=nocap)
+
+
+cook to_json(scores):
+    serve json.dumps({"ranking": rank(scores)})

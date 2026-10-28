@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 (unreleased)
+## 0.4.0
 
 - `idc ValueError:` runs a block and ignores that error
 - `bruh()` opens the debugger, `@corememory` caches a function's results,
@@ -10,8 +10,10 @@
 - Helpers (`squad`, `pickone`, `bedrot`, ...) only count when called, so a
   variable with the same name keeps working
 - `slaython build`, `slaython fmt`, `slaython lint` and a Jupyter kernel
+- Slang works inside f-strings on Python 3.10 and 3.11 too
 - Docs site, live translator in the playground, pre-commit hooks, GitHub
-  colours for .slay files, contributor guide and templates
+  colours for .slay files, contributor guide and templates, VS Code
+  release workflow
 
 ## 0.3.1
 

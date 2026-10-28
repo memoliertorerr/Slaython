@@ -316,6 +316,32 @@ W examples/testing/test_feed.slay::test_ratio
 Use `ongod` to check things. Add `-v` to see full tracebacks for Ls.
 `vibecheck "name":` blocks in any `.slay` file are picked up too.
 
+## Build and format
+
+`slaython build` turns a Slaython project into plain Python that runs
+without Slaython installed, so you can ship it to anyone:
+
+```sh
+slaython build                     # this folder -> build/py
+slaython build src/ -o out/        # pick the source and output folders
+slaython build app.slay -o out/    # a single file
+slaython build --clean             # empty the output folder first
+```
+
+Every `.slay` file becomes a `.py` file at the same path (with the same
+line numbers), other files are copied, and a tiny runtime module is added
+where the code needs Slaython's helpers.
+
+`slaython fmt` formats `.slay` files: 4-space indentation, consistent
+spacing and blank lines. It never changes what the code does (it checks
+that the tokens are identical before writing):
+
+```sh
+slaython fmt                  # every .slay file under this folder
+slaython fmt --check          # change nothing, exit 1 if a file would change
+slaython fmt --diff           # print the changes instead of writing them
+```
+
 ## Lint
 
 `slaython lint` catches mistakes before you run anything: undefined names

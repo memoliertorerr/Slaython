@@ -574,7 +574,8 @@ def _check_constants(sig, line_of, constants, filename, source, table):
 
 def _apply(source: str, edits: List[Edit]) -> str:
     lines = io.StringIO(source).readlines()
-    for e in sorted(edits, key=lambda e: (e.row, e.start), reverse=True):
+    # Right to left. At the same spot, swap a word before inserting text in front of it.
+    for e in sorted(edits, key=lambda e: (e.row, e.start, e.end > e.start), reverse=True):
         line = lines[e.row - 1]
         lines[e.row - 1] = line[:e.start] + e.text + line[e.end:]
     return "".join(lines)

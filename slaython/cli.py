@@ -19,6 +19,8 @@ slaython slayify file.py [-o out.slay]     Python -> Slaython
 slaython test [paths...] [-v]         run test_*.slay / *_test.slay tests
 slaython glowup [paths] [--check|--diff]   swap leftover Python keywords for slang
 slaython learn [lesson] [--list|--reset]   interactive tutorial
+slaython build [src] [-o out] [--clean]   turn .slay files into plain Python (default out: build/py)
+slaython fmt [paths] [--check|--diff]     format .slay files (- for stdin)
 slaython lint [paths] [--select/--ignore CODES]   catch mistakes before running
 slaython kernel install|remove|list   Jupyter kernel for Slaython notebooks
 slaython autoimport on|off|status     let plain python import .slay files
@@ -110,6 +112,12 @@ def main(argv=None):
     if cmd == "learn":
         from .learn import main as learn_main
         return learn_main(rest)
+    if cmd == "build":
+        from .build import main as build_main
+        return build_main(rest)
+    if cmd == "fmt":
+        from .fmt import main as fmt_main
+        return fmt_main(rest)
     if cmd == "lint":
         from .lint import main as lint_main
         return lint_main(rest)

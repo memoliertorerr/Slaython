@@ -3,6 +3,7 @@
 
 deadass MAX_LIKES = 1_000
 
+
 blueprint Post:
     cook __init__(mee, caption, likes):
         mee.caption = caption

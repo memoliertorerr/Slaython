@@ -1,5 +1,6 @@
 # blueprint = class, cook = def, serve = return, og() = super()
 
+
 blueprint Creator:
     cook __init__(self, name, followers=0):
         self.name = name

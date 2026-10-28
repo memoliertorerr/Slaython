@@ -1,5 +1,6 @@
 # shoot = try, fumble = except, periodt = finally, yeet = raise, ongod = assert
 
+
 blueprint RatioError(Exception):
     chill
 

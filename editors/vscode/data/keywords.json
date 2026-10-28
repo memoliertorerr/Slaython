@@ -331,6 +331,13 @@
       "kind": "builtin"
     },
     {
+      "slang": "bruh",
+      "python": "breakpoint",
+      "meaning": "bruh... what is going on",
+      "why": "stop here and open the debugger",
+      "kind": "builtin"
+    },
+    {
       "slang": "lowkeysus",
       "python": "slaython.sus",
       "meaning": "kinda suspicious",
@@ -356,6 +363,20 @@
       "python": "random.choice",
       "meaning": "just pick one",
       "why": "a random item from a list",
+      "kind": "helper"
+    },
+    {
+      "slang": "corememory",
+      "python": "functools.cache",
+      "meaning": "a memory that stuck for good",
+      "why": "@corememory makes a function remember its answers",
+      "kind": "helper"
+    },
+    {
+      "slang": "squad",
+      "python": "asyncio.gather",
+      "meaning": "the whole crew",
+      "why": "run lowkey tasks together and wait for all",
       "kind": "helper"
     },
     {
@@ -405,6 +426,13 @@
       "python": "inline test",
       "meaning": "checking the vibe",
       "why": "a test block that only slaython test runs",
+      "kind": "syntax"
+    },
+    {
+      "slang": "idc",
+      "python": "contextlib.suppress",
+      "meaning": "I don't care",
+      "why": "idc ValueError: runs a block and ignores that error",
       "kind": "syntax"
     },
     {

@@ -1,0 +1,2 @@
+# Show .slay files with Python colours on GitHub.
+*.slay linguist-language=Python linguist-detectable=true

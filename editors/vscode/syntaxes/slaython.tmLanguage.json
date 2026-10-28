@@ -115,7 +115,7 @@
     },
     {
       "name": "keyword.control.slaython",
-      "match": "(?<!\\.)\\b(maincharacter|doomscroll|vibecheck|ornah\\s+fr|lockedin|runitfoo|speedrun|anyways|periodt|mutuals|deadass|fumble|pullup|linkup|cancel|holdup|ornah|chill|serve|shoot|ongod|outta|viral|spill|drop|yeet|lore|gang|dip|aka|pov|fr)\\b(?!\\s*=(?!=))"
+      "match": "(?<!\\.)\\b(maincharacter|doomscroll|vibecheck|ornah\\s+fr|lockedin|runitfoo|speedrun|anyways|periodt|mutuals|deadass|fumble|pullup|linkup|cancel|holdup|ornah|chill|serve|shoot|ongod|outta|viral|spill|drop|yeet|lore|gang|dip|aka|pov|idc|fr)\\b(?!\\s*=(?!=))"
     },
     {
       "name": "keyword.operator.logical.slaython",
@@ -127,7 +127,7 @@
     },
     {
       "name": "support.function.builtin.slaython",
-      "match": "(?<!\\.)\\b(headzortailz|howlongisit|skillissue|touchgrass|lowkeysus|tierlist|whoisyou|pickone|giving|bedrot|goat|flop|yap|hmu|og)\\b(?!\\s*=(?!=))"
+      "match": "(?<!\\.)\\b(headzortailz|howlongisit|skillissue|touchgrass|corememory|lowkeysus|tierlist|whoisyou|pickone|giving|bedrot|squad|goat|flop|bruh|yap|hmu|og)\\b(?!\\s*=(?!=))"
     },
     {
       "name": "variable.language.self.slaython",

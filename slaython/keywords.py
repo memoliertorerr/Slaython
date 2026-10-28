@@ -83,6 +83,8 @@ SLANG = [
     Slang("touchgrass", "exit", "go outside, get offline", "quit the program", kind="builtin"),
     Slang("mee", "self", "me, myself", "the object talking about itself", kind="builtin"),
     Slang("howlongisit", "len", "how long is it?", "how many items something has", kind="builtin"),
+    Slang("bruh", "breakpoint", "bruh... what is going on", "stop here and open the debugger",
+          kind="builtin"),
     # --- helpers --------------------------------------------------------
     Slang("lowkeysus", "slaython.sus", "kinda suspicious", "prints an expression and its value",
           kind="helper"),
@@ -91,6 +93,10 @@ SLANG = [
     Slang("headzortailz", "random coin flip", "heads or tails", "nocap or cap at random",
           kind="helper"),
     Slang("pickone", "random.choice", "just pick one", "a random item from a list", kind="helper"),
+    Slang("corememory", "functools.cache", "a memory that stuck for good",
+          "@corememory makes a function remember its answers", kind="helper"),
+    Slang("squad", "asyncio.gather", "the whole crew", "run lowkey tasks together and wait for all",
+          kind="helper"),
     # --- new syntax -----------------------------------------------------
     Slang("runitfoo", "for _ in range(n)", "run it back", "runitfoo 3: repeats a block 3 times",
           kind="syntax"),
@@ -105,6 +111,8 @@ SLANG = [
           "times the block and prints how long it took", kind="syntax"),
     Slang("vibecheck", "inline test", "checking the vibe",
           "a test block that only slaython test runs", kind="syntax"),
+    Slang("idc", "contextlib.suppress", "I don't care", "idc ValueError: runs a block and ignores that error",
+          kind="syntax"),
     Slang("|>", "pipe: x |> f = f(x)", "pass it on", "feeds a value into the next function",
           kind="operator"),
 ]
@@ -127,6 +135,8 @@ HELPERS = {
     "bedrot": '__import__("slaython").bedrot',
     "headzortailz": '__import__("slaython").headzortailz',
     "pickone": '__import__("slaython").pickone',
+    "corememory": '__import__("functools").cache',
+    "squad": '__import__("asyncio").gather',
 }
 SUS_WORD = "lowkeysus"
 REPEAT_WORD = "runitfoo"
@@ -136,6 +146,7 @@ DATACLASS_WORD = "lore"
 ENUM_WORD = "gang"
 TIMER_WORD = "speedrun"
 INLINE_TEST_WORD = "vibecheck"
+IGNORE_WORD = "idc"
 PIPE = "|>"
 
 ALL_SLANG_WORDS = (

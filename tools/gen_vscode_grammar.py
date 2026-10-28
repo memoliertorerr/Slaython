@@ -19,7 +19,7 @@ sys.path.insert(0, ROOT)
 from slaython import __version__  # noqa: E402
 from slaython.keywords import (  # noqa: E402
     CONST_WORD, DATACLASS_WORD, ENUM_WORD, INLINE_TEST_WORD, KEPT_PYTHON, MAIN_WORD, PIPE,
-    REPEAT_WORD, SLANG, TIMER_WORD,
+    IGNORE_WORD, REPEAT_WORD, SLANG, TIMER_WORD,
 )
 
 OUT = os.path.join(ROOT, "editors", "vscode")
@@ -196,6 +196,8 @@ def snippets():
                      python="with"),
         "main": snip(MAIN_WORD, 'if __name__ == "__main__"', MAIN_WORD + ":", "\t${1:main()}"),
         "timer": snip(TIMER_WORD, "time a block", TIMER_WORD + ":", block % 1),
+        "ignore error": snip(IGNORE_WORD, "run a block and ignore one kind of error",
+                             IGNORE_WORD + " ${1:FileNotFoundError}:", block % 2),
         "inline test": snip(INLINE_TEST_WORD, "inline test, run by slaython test",
                             INLINE_TEST_WORD + ' "${1:it works}":', f"\t{assert_} ${{2:{true}}}"),
         "constant": snip(CONST_WORD, "constant that can never be reassigned",

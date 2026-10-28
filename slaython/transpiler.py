@@ -19,6 +19,7 @@ from .keywords import (
     DATACLASS_WORD,
     ENUM_WORD,
     HELPERS,
+    IGNORE_WORD,
     INLINE_TEST_WORD,
     MAIN_WORD,
     PY_TO_SLANG,
@@ -92,7 +93,7 @@ def _syntax_error(msg, filename, tok, source):
     return SyntaxError(msg, (filename, tok.start[0], tok.start[1] + 1, text))
 
 
-def _plan(source, filename, table, soft, compounds, forward=False):
+def _plan(source, filename, table, soft, compounds, forward=False, aliases=None):
     """Work out which tokens to rewrite.
 
     Returns (edits, names_left_alone). The second list holds NAME tokens in
@@ -224,6 +225,14 @@ def _plan(source, filename, table, soft, compounds, forward=False):
             continue
         word = tok.string
         nxt = name_at(i + 1)
+        if aliases:  # project words count as the built-in word they stand for
+            word = aliases.get(word, word)
+            nxt = aliases.get(nxt, nxt)
+            if " " in word:  # a project word for a two-word keyword (ornah fr)
+                if not plain_name_position(i):
+                    edits.append(Edit(tok.start[0], tok.start[1], tok.end[1],
+                                      compounds[tuple(word.split())]))
+                continue
         pair = (word, nxt)
         if (pair in compounds and sig[i + 1].start[0] == tok.end[0]
                 and not plain_name_position(i) and not is_op(i + 2, "=")):
@@ -277,7 +286,9 @@ def _plan(source, filename, table, soft, compounds, forward=False):
                     edits.append(Edit(paren.end[0], paren.end[1], paren.end[1],
                                       f"{shown!r}, {tok.start[0]}, "))
                     continue
-            if word in HELPERS:
+            # helpers only count when called or used as a decorator, so a
+            # variable called `squad` stays a variable
+            if word in HELPERS and (is_op(i + 1, "(") or is_op(i - 1, "@")):
                 edits.append(Edit(tok.start[0], tok.start[1], tok.end[1], HELPERS[word]))
                 continue
             row = tok.start[0]
@@ -340,6 +351,18 @@ def _plan(source, filename, table, soft, compounds, forward=False):
                 colon = statement_colon(i)
                 if colon is not None:
                     edits.append(Edit(row, tok.start[1], _gap_end(tok, sig[i + 1]), timer + ", "))
+                    c = sig[colon]
+                    edits.append(Edit(c.start[0], c.start[1], c.start[1], ")"))
+                    continue
+            # idc ValueError:  ->  with contextlib.suppress(ValueError):
+            if word == IGNORE_WORD and at_start(i):
+                suppress = 'with __import__("contextlib").suppress('
+                if is_op(i + 1, ":"):
+                    edits.append(Edit(row, tok.start[1], tok.end[1], suppress + "Exception)"))
+                    continue
+                colon = statement_colon(i)
+                if colon is not None:
+                    edits.append(Edit(row, tok.start[1], _gap_end(tok, sig[i + 1]), suppress))
                     c = sig[colon]
                     edits.append(Edit(c.start[0], c.start[1], c.start[1], ")"))
                     continue
@@ -474,9 +497,17 @@ class Translation(NamedTuple):
 EDITS_BY_FILE: Dict[str, List[Edit]] = {}
 
 
-def translate(source: str, filename: str = "<slay>") -> Translation:
-    """Word-level translation. compiler.py finishes `shoot n:` and `|>`."""
-    edits, _, post = _plan(source, filename, SLANG_TO_PY, SOFT_SLANG, COMPOUND_SLANG, forward=True)
+def translate(source: str, filename: str = "<slay>", words=None) -> Translation:
+    """Word-level translation. compiler.py finishes `shoot n:` and `|>`.
+
+    `words` are extra project words ({new word: built-in word}); by default
+    they come from the nearest pyproject.toml (see dialect.py).
+    """
+    if words is None:
+        from .dialect import words_for
+        words = words_for(filename)
+    edits, _, post = _plan(source, filename, SLANG_TO_PY, SOFT_SLANG, COMPOUND_SLANG,
+                           forward=True, aliases=words)
     EDITS_BY_FILE[filename] = edits
     pipes = [(row, slang_col_to_python(edits, row, col)) for row, col in post["pipes"]]
     return Translation(_apply(source, edits), edits, post["retry"], pipes)

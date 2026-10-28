@@ -1,0 +1,49 @@
+name: vscode
+
+# Builds the VS Code extension on every published release and attaches the
+# .vsix to it. Publishes to the Marketplace / Open VSX when the VSCE_PAT /
+# OVSX_PAT repository secrets exist.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extension:
+    runs-on: ubuntu-latest
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Check the generated files are current
+        run: python tools/gen_vscode_grammar.py --check
+      - name: Test
+        run: |
+          node editors/vscode/test/lookup.test.js
+          PYTHONPATH=. node editors/vscode/test/extension.test.js
+      - name: Package
+        working-directory: editors/vscode
+        run: npx --yes @vscode/vsce package -o slaython.vsix
+      - name: Attach to the release
+        if: github.event_name == 'release'
+        run: gh release upload "$GITHUB_REF_NAME" editors/vscode/slaython.vsix --clobber
+      - name: Publish to the VS Code Marketplace
+        if: env.VSCE_PAT != ''
+        working-directory: editors/vscode
+        run: npx --yes @vscode/vsce publish --packagePath slaython.vsix -p "$VSCE_PAT"
+      - name: Publish to Open VSX
+        if: env.OVSX_PAT != ''
+        working-directory: editors/vscode
+        run: npx --yes ovsx publish slaython.vsix -p "$OVSX_PAT"

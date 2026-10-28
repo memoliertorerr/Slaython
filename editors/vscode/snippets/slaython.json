@@ -209,6 +209,14 @@
     ],
     "description": "time a block"
   },
+  "idc: ignore error": {
+    "prefix": "idc",
+    "body": [
+      "idc ${1:FileNotFoundError}:",
+      "\t${2:chill}"
+    ],
+    "description": "run a block and ignore one kind of error"
+  },
   "vibecheck: inline test": {
     "prefix": "vibecheck",
     "body": [

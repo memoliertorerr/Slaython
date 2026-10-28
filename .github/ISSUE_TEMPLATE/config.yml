@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Try it in the playground
+    url: https://memoliertorerr.github.io/Slaython/
+    about: Run Slaython in your browser before filing an issue.

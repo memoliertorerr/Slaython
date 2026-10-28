@@ -140,6 +140,13 @@ file bit by bit.
 | `bedrot(s)` | `time.sleep(s)` | do nothing for a while |
 | `headzortailz()` | random `True`/`False` | flip a coin |
 | `pickone(items)` | `random.choice(items)` | just pick one |
+| `bruh()` | `breakpoint()` | stop here and open the debugger |
+| `@corememory` | `@functools.cache` | the function remembers its answers |
+| `squad(a, b)` | `asyncio.gather(a, b)` | run lowkey tasks together |
+
+Helpers (`lowkeysus`, `bedrot`, `headzortailz`, `pickone`, `corememory`,
+`squad`) only count when you call them or use them as a decorator, so a
+variable called `squad` is still just a variable.
 
 ## Syntax Python doesn't have
 
@@ -196,6 +203,10 @@ maincharacter:
 # a test that lives next to the code; only `slaython test` runs it
 vibecheck "double works":
     ongod double(2) == 4
+
+# I don't care: run a block and ignore that error (`idc:` ignores any error)
+idc FileNotFoundError:
+    cleanup("old.txt")
 ```
 
 Details:
@@ -212,6 +223,22 @@ Details:
 
 See [`examples/feed_app.slay`](https://github.com/memoliertorerr/Slaython/blob/main/examples/feed_app.slay) for all of these in one
 small program.
+
+## Your own words
+
+A project can add its own words in `pyproject.toml`. They work next to the
+built-in ones in every `.slay` file under that folder (and in the REPL or
+`-c` when you run from there):
+
+```toml
+[tool.slaython.words]
+frfr = "if"          # a Python keyword or builtin...
+vibe = "doomscroll"  # ...or an existing Slaython word
+spit = "print"
+```
+
+New words can't reuse a word Slaython already has, so every project still
+reads the same built-in words the same way.
 
 ## Working with Python
 

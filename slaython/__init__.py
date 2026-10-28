@@ -17,7 +17,9 @@ In Jupyter or IPython: `%load_ext slaython`, then `%%slay` cells.
 
 __version__ = "0.2.0"
 
-from .helpers import _sus, bedrot  # noqa: E402,F401
+from .helpers import (  # noqa: E402,F401
+    Lore, _attempts, _gang_values, _speedrun, _sus, bedrot, headzortailz, pickone,
+)
 from .importer import install, uninstall  # noqa: E402
 from .keywords import SLANG, keyword_table  # noqa: E402
 from .runner import compile_slay, run_file, slay, slay_eval  # noqa: E402
@@ -38,6 +40,6 @@ def unload_ipython_extension(ipython):
 
 
 __all__ = [
-    "SLANG", "bedrot", "compile_slay", "install", "keyword_table", "run_file", "slay",
+    "SLANG", "Lore", "bedrot", "compile_slay", "headzortailz", "install", "pickone", "keyword_table", "run_file", "slay",
     "slay_eval", "slayify", "slayify_with_report", "transpile", "uninstall",
 ]

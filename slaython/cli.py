@@ -17,6 +17,8 @@ slaython - [args...]                  run code piped in on stdin
 slaython translate file.slay [-o out.py]   Slaython -> Python
 slaython slayify file.py [-o out.slay]     Python -> Slaython
 slaython test [paths...] [-v]         run test_*.slay / *_test.slay tests
+slaython glowup [paths] [--check|--diff]   swap leftover Python keywords for slang
+slaython learn [lesson] [--list|--reset]   interactive tutorial
 slaython autoimport on|off|status     let plain python import .slay files
 slaython keywords                     print the slang sheet
 slaython version
@@ -100,6 +102,12 @@ def main(argv=None):
         from .testing import run_tests
         verbose = "-v" in rest or "--verbose" in rest
         return run_tests([a for a in rest if a not in ("-v", "--verbose")], verbose=verbose)
+    if cmd == "glowup":
+        from .glowup import main as glowup_main
+        return glowup_main(rest)
+    if cmd == "learn":
+        from .learn import main as learn_main
+        return learn_main(rest)
     if cmd == "autoimport":
         from .autoimport import main as autoimport_main
         return autoimport_main(rest)

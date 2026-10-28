@@ -39,7 +39,9 @@ Needs Python 3.10 or newer. Nothing else is required.
 slaython examples/fizzbuzz.slay      # run a file (also: slay, python -m slaython)
 slaython                             # interactive REPL
 slaython -c 'yap("hi bestie")'       # run a snippet
-slaython test                        # run test_*.slay files
+slaython test                        # run test_*.slay files and vibecheck blocks
+slaython glowup                      # swap leftover Python keywords for slang
+slaython learn                       # interactive tutorial
 slaython translate file.slay         # print the Python version
 slaython slayify file.py             # turn Python into Slaython
 slaython autoimport on               # let plain python import .slay files
@@ -105,8 +107,11 @@ file bit by bit.
 | `skillissue` | `Exception` | the base error type |
 | `touchgrass()` | `exit()` | quit and go outside |
 | `mee` | `self` | the object talking about itself |
+| `howlongisit()` | `len()` | how long is it? |
 | `lowkeysus(x)` | debug print | prints `lowkeysus line 12: x = 42` and returns `x` |
 | `bedrot(s)` | `time.sleep(s)` | do nothing for a while |
+| `headzortailz()` | random `True`/`False` | flip a coin |
+| `pickone(items)` | `random.choice(items)` | just pick one |
 
 ## Syntax Python doesn't have
 
@@ -126,6 +131,59 @@ fr likes < 0:
 `deadass` is checked when the file is translated: reassigning, augmenting
 (`+=`) or `cancel`-ing the name anywhere in the same file is a syntax
 error. Other modules can still change it at run time, like any Python name.
+
+```python
+# data classes: __init__, repr and == for free
+lore Post:
+    caption: str
+    likes: int = 0
+
+lore Point(frozen=nocap):      # dataclass options go in the header
+    x: int
+
+# enums: a fixed set of named values, numbered for you
+gang Mood: ATE, MID, COOKED
+
+gang Size:
+    SMALL
+    BIG, HUGE
+
+# pipes: x |> f is f(x), and x |> f(y) is f(x, y)
+feed |> tierlist(key=nohead p: p.likes) |> howlongisit
+
+# retry a flaky block up to 3 times before fumble runs
+shoot 3:
+    data = fetch(url)
+fumble ConnectionError:
+    data = ghosted
+
+# time a block (prints "speedrun line 12: 0.042s", or use a label)
+speedrun "ranking":
+    ranked = tierlist(feed)
+
+# runs only when the file is run directly, not when it's pulled up
+maincharacter:
+    main()
+
+# a test that lives next to the code; only `slaython test` runs it
+vibecheck "double works":
+    ongod double(2) == 4
+```
+
+Details:
+
+- `|>` binds tighter than comparisons and `orr`/`and`, like in Elixir:
+  `a |> f == b` is `f(a) == b`.
+- `shoot n:` only retries errors that its `fumble` catches (any error if
+  there's no `fumble`). `periodt` runs once at the end, not per try.
+  `dip`/`anyways` can't go straight inside a `shoot n:` block.
+- `lore` and `gang` blueprints can have methods like any blueprint.
+  `lore` can extend another `lore`.
+- `lore`, `gang`, `speedrun`, `vibecheck` and `maincharacter` only count at
+  the start of a line, so you can still use them as names elsewhere.
+
+See [`examples/feed_app.slay`](examples/feed_app.slay) for all of these in one
+small program.
 
 ## Working with Python
 
@@ -181,6 +239,19 @@ W examples/testing/test_feed.slay::test_ratio
 ```
 
 Use `ongod` to check things. Add `-v` to see full tracebacks for Ls.
+`vibecheck "name":` blocks in any `.slay` file are picked up too.
+
+## Glow up
+
+`slaython glowup` swaps plain Python left in `.slay` files for slang
+(`if` becomes `fr`, `self` becomes `mee`, `if __name__ == "__main__":`
+becomes `maincharacter:` and so on):
+
+```sh
+slaython glowup              # every .slay file under this folder
+slaython glowup --diff src/  # show what would change
+slaython glowup --check      # for CI: exit 1 if anything needs a glowup
+```
 
 ## Errors in slang
 
@@ -214,6 +285,9 @@ explanations off with `slaython --no-vibes ...` or `SLAYTHON_VIBES=0`.
   libraries keep working.
 - **`spill`, `pov` and `runitfoo` only count at the start of a line**
   ending in `:`, so `spill = 3` is still a normal variable.
+- **`slaython translate` on files with `shoot n:` or `|>`** rebuilds the
+  Python from the syntax tree, so comments and blank lines are dropped in
+  that output. Running the file is not affected.
 - **f-strings on Python 3.10 and 3.11:** slang inside `{...}` is not
   translated, because those versions read an f-string as one token. Use
   Python 3.12+ or Python keywords inside f-string braces there.

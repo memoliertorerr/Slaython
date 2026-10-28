@@ -19,6 +19,7 @@ class Slang:
     # compound - a two-word keyword (ornah fr = elif)
     # helper   - a Slaython runtime helper (bedrot = time.sleep)
     # syntax   - new syntax that Python doesn't have (runitfoo, deadass)
+    # operator - a new operator (|>)
     kind: str = "keyword"
 
 
@@ -81,16 +82,31 @@ SLANG = [
     Slang("skillissue", "Exception", "your own fault", "the base error type", kind="builtin"),
     Slang("touchgrass", "exit", "go outside, get offline", "quit the program", kind="builtin"),
     Slang("mee", "self", "me, myself", "the object talking about itself", kind="builtin"),
+    Slang("howlongisit", "len", "how long is it?", "how many items something has", kind="builtin"),
     # --- helpers --------------------------------------------------------
     Slang("lowkeysus", "slaython.sus", "kinda suspicious", "prints an expression and its value",
           kind="helper"),
     Slang("bedrot", "time.sleep", "staying in bed doing nothing", "pause for some seconds",
           kind="helper"),
+    Slang("headzortailz", "random coin flip", "heads or tails", "nocap or cap at random",
+          kind="helper"),
+    Slang("pickone", "random.choice", "just pick one", "a random item from a list", kind="helper"),
     # --- new syntax -----------------------------------------------------
     Slang("runitfoo", "for _ in range(n)", "run it back", "runitfoo 3: repeats a block 3 times",
           kind="syntax"),
     Slang("deadass", "constant", "dead serious", "deadass X = 1 can never be reassigned",
           kind="syntax"),
+    Slang("maincharacter", 'if __name__ == "__main__"', "the main character",
+          "runs only when the file is run directly", kind="syntax"),
+    Slang("lore", "@dataclass class", "the backstory, just the facts",
+          "a blueprint that only holds data", kind="syntax"),
+    Slang("gang", "Enum class", "a fixed crew", "a fixed set of named values", kind="syntax"),
+    Slang("speedrun", "timer block", "doing it as fast as possible",
+          "times the block and prints how long it took", kind="syntax"),
+    Slang("vibecheck", "inline test", "checking the vibe",
+          "a test block that only slaython test runs", kind="syntax"),
+    Slang("|>", "pipe: x |> f = f(x)", "pass it on", "feeds a value into the next function",
+          kind="operator"),
 ]
 
 # Python keywords that deliberately have no slang: write them as in Python.
@@ -109,13 +125,22 @@ COMPOUND_SLANG = {tuple(s.slang.split()): s.python for s in SLANG if s.kind == "
 HELPERS = {
     "lowkeysus": '__import__("slaython")._sus',
     "bedrot": '__import__("slaython").bedrot',
+    "headzortailz": '__import__("slaython").headzortailz',
+    "pickone": '__import__("slaython").pickone',
 }
 SUS_WORD = "lowkeysus"
 REPEAT_WORD = "runitfoo"
 CONST_WORD = "deadass"
+MAIN_WORD = "maincharacter"
+DATACLASS_WORD = "lore"
+ENUM_WORD = "gang"
+TIMER_WORD = "speedrun"
+INLINE_TEST_WORD = "vibecheck"
+PIPE = "|>"
 
 ALL_SLANG_WORDS = (
-    set(SLANG_TO_PY) | set(HELPERS) | {REPEAT_WORD, CONST_WORD}
+    set(SLANG_TO_PY) | set(HELPERS)
+    | {s.slang for s in SLANG if s.kind == "syntax"}
     | {w for pair in COMPOUND_SLANG for w in pair}
 )
 

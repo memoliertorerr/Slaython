@@ -10,7 +10,8 @@ import traceback
 import types
 
 from .importer import install
-from .transpiler import EDITS_BY_FILE, python_col_to_slang, transpile_with_edits
+from .compiler import compile_source
+from .transpiler import EDITS_BY_FILE, python_col_to_slang
 from .vibes import vibe_for
 
 _PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -23,28 +24,7 @@ def compile_slay(source, filename="<slay>", mode="exec"):
         # Keep the slang source around so tracebacks can show it.
         lines = io.StringIO(source).readlines()
         linecache.cache[filename] = (len(source), None, lines, filename)
-    python, edits = transpile_with_edits(source, filename=filename)
-    try:
-        return compile(python, filename, mode, dont_inherit=True)
-    except SyntaxError as exc:
-        _point_at_slang(exc, source, edits)
-        raise
-
-
-def _point_at_slang(exc, source, edits):
-    """Make a SyntaxError show the Slaython line, with the caret in the right spot."""
-    if not exc.lineno:
-        return
-    # Split like the tokenizer does (on "\n" only) so line numbers agree.
-    lines = io.StringIO(source).readlines()
-    if not 0 < exc.lineno <= len(lines):
-        return
-    exc.text = lines[exc.lineno - 1].rstrip("\r\n") + "\n"
-    if exc.offset:
-        exc.offset = python_col_to_slang(edits, exc.lineno, exc.offset - 1) + 1
-    end_lineno = getattr(exc, "end_lineno", None)
-    if getattr(exc, "end_offset", None) and end_lineno == exc.lineno:
-        exc.end_offset = python_col_to_slang(edits, end_lineno, exc.end_offset - 1) + 1
+    return compile_source(source, filename, mode)
 
 
 def _caller_namespaces(globals_, locals_):

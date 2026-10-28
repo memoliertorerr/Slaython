@@ -1,0 +1,62 @@
+# A tiny feed app that shows off lore, gang, |>, shoot n:, speedrun,
+# vibecheck and maincharacter.
+# Run it:   slaython examples/feed_app.slay
+# Test it:  slaython test examples/feed_app.slay
+
+gang Mood: ATE, MID, COOKED
+
+
+lore Post:
+    caption: str
+    likes: int = 0
+
+    cook mood(mee):
+        fr mee.likes >= 400:
+            serve Mood.ATE
+        ornah fr mee.likes >= 50:
+            serve Mood.MID
+        serve Mood.COOKED
+
+
+attempts = 0
+
+
+cook load_feed():
+    """Pretend network call that lags out twice before it works."""
+    viral attempts
+    attempts += 1
+    fr attempts < 3:
+        yeet ConnectionError("wifi is lagging")
+    serve [Post("fit check", 420), Post("ratio", 12), Post("mid take", 77)]
+
+
+cook top(posts):
+    serve posts |> tierlist(key=nohead p: p.likes, reverse=nocap)
+
+
+cook captions(posts):
+    serve [p.caption doomscroll p in posts]
+
+
+vibecheck "top post goes first":
+    ongod top([Post("a", 1), Post("b", 5)])[0].caption == "b"
+
+
+vibecheck "moods":
+    ongod Post("x", 999).mood() literally Mood.ATE
+    ongod Post("x", 0).mood() literally Mood.COOKED
+
+
+maincharacter:
+    shoot 5:
+        feed = load_feed()
+    fumble ConnectionError:
+        feed = []
+    yap(f"loaded after {attempts} tries")
+
+    speedrun "ranking":
+        ranked = feed |> top
+
+    doomscroll post in ranked:
+        yap(post, post.mood().name)
+    yap(ranked |> captions |> ", ".join)

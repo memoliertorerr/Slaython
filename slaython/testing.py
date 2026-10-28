@@ -2,6 +2,7 @@
 
 Every module-level function whose name starts with `test` is a test, and so
 is every `test*` method of a blueprint (class) whose name starts with `Test`.
+`vibecheck "name":` blocks count too, in any .slay file.
 Async (lowkey) tests run with asyncio. A test passes (W) if it returns,
 and fails (L) if it raises; ongod (assert) is the usual way to check things.
 """
@@ -10,25 +11,49 @@ import asyncio
 import importlib.util
 import inspect
 import os
+import re
 import sys
 import time
 import traceback
 
 from .importer import SlayLoader, install
+from .keywords import INLINE_TEST_WORD
 from .vibes import vibe_for
 
 
+_INLINE = re.compile(r"^[ \t]*" + INLINE_TEST_WORD + r"\s+[rRbBuUfF]*[\"']", re.M)
+_INLINE_PREFIX = "test_vibecheck_"
+
+
+def _is_test_file(name):
+    return name.startswith("test_") or name.endswith("_test.slay")
+
+
+def _has_inline_tests(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return bool(_INLINE.search(f.read()))
+    except (OSError, UnicodeDecodeError):
+        return False
+
+
 def find_test_files(paths):
+    """[(path, inline_only)]: test files, plus other files with vibecheck blocks."""
     found = []
     for path in paths or ["."]:
         if os.path.isfile(path):
-            found.append(os.path.abspath(path))
+            found.append((os.path.abspath(path), not _is_test_file(os.path.basename(path))))
             continue
         for root, dirs, files in os.walk(path):
             dirs[:] = sorted(d for d in dirs if not d.startswith(".") and d != "__pycache__")
             for name in sorted(files):
-                if name.endswith(".slay") and (name.startswith("test_") or name.endswith("_test.slay")):
-                    found.append(os.path.abspath(os.path.join(root, name)))
+                if not name.endswith(".slay"):
+                    continue
+                full = os.path.abspath(os.path.join(root, name))
+                if _is_test_file(name):
+                    found.append((full, False))
+                elif _has_inline_tests(full):
+                    found.append((full, True))
     return found
 
 
@@ -50,11 +75,19 @@ def _load(path):
     return module
 
 
-def _collect(module):
+def _label(name, func):
+    if name.startswith(_INLINE_PREFIX) and func.__defaults__:
+        return f"{INLINE_TEST_WORD} {func.__defaults__[0]!r}"
+    return name
+
+
+def _collect(module, inline_only=False):
     tests = []
     for name, obj in vars(module).items():
+        if inline_only and not name.startswith(_INLINE_PREFIX):
+            continue
         if name.startswith("test") and inspect.isfunction(obj) and obj.__module__ == module.__name__:
-            tests.append((name, obj))
+            tests.append((_label(name, obj), obj))
         elif name.startswith("Test") and inspect.isclass(obj) and obj.__module__ == module.__name__:
             for meth_name, meth in vars(obj).items():
                 if meth_name.startswith("test") and inspect.isfunction(meth):
@@ -87,11 +120,11 @@ def run_tests(paths=(), verbose=False, out=None):
     install()
     files = find_test_files(list(paths))
     if not files:
-        out.write("no test files found (looking for test_*.slay or *_test.slay)\n")
+        out.write("no tests found (looking for test_*.slay, *_test.slay and vibecheck blocks)\n")
         return 5
     wins = losses = 0
     started = time.perf_counter()
-    for path in files:
+    for path, inline_only in files:
         rel = _display_path(path)
         try:
             module = _load(path)
@@ -101,7 +134,7 @@ def run_tests(paths=(), verbose=False, out=None):
             if verbose:
                 out.write("".join(traceback.format_exception(type(exc), exc, exc.__traceback__)))
             continue
-        for name, func in _collect(module):
+        for name, func in _collect(module, inline_only):
             try:
                 _run_one(func)
             except Exception as exc:  # noqa: BLE001

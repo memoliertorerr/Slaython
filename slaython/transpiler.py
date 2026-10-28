@@ -16,13 +16,18 @@ from .keywords import (
     ALL_SLANG_WORDS,
     COMPOUND_SLANG,
     CONST_WORD,
+    DATACLASS_WORD,
+    ENUM_WORD,
     HELPERS,
+    INLINE_TEST_WORD,
+    MAIN_WORD,
     PY_TO_SLANG,
     REPEAT_WORD,
     SLANG_TO_PY,
     SOFT_PY,
     SOFT_SLANG,
     SUS_WORD,
+    TIMER_WORD,
 )
 
 _IGNORED = (tokenize.COMMENT, tokenize.NL, tokenize.ENCODING, tokenize.INDENT, tokenize.DEDENT)
@@ -195,11 +200,27 @@ def _plan(source, filename, table, soft, compounds, forward=False):
             text = lines[r1 - 1][c1:] + "".join(lines[r1:r2 - 1]) + lines[r2 - 1][:c2]
         return " ".join(text.split())
 
+    def at_start(i):
+        return line_of.get(i, (None,))[0] == i
+
+    def same_row(a, b):
+        return sig[a].start[0] == sig[b].start[0]
+
     edits, untouched = [], []
+    post = {"retry": {}, "pipes": []}  # work for the syntax-tree pass (see compiler.py)
     constants = {}  # deadass name -> index of its declaration
     skip = set()
     for i, tok in enumerate(sig):
-        if i in skip or tok.type != tokenize.NAME:
+        if i in skip:
+            continue
+        # x |> f  ->  x | f, marked so the syntax-tree pass turns it into f(x)
+        if (forward and tok.type == tokenize.OP and tok.string == "|" and is_op(i + 1, ">")
+                and sig[i + 1].start == tok.end):
+            edits.append(Edit(tok.start[0], tok.start[1], sig[i + 1].end[1], "| "))
+            post["pipes"].append(tok.start)
+            skip.add(i + 1)
+            continue
+        if tok.type != tokenize.NAME:
             continue
         word = tok.string
         nxt = name_at(i + 1)
@@ -259,6 +280,84 @@ def _plan(source, filename, table, soft, compounds, forward=False):
             if word in HELPERS:
                 edits.append(Edit(tok.start[0], tok.start[1], tok.end[1], HELPERS[word]))
                 continue
+            row = tok.start[0]
+            # maincharacter:  ->  if __name__ == "__main__":
+            if word == MAIN_WORD and at_start(i) and is_op(i + 1, ":"):
+                edits.append(Edit(row, tok.start[1], tok.end[1], 'if __name__ == "__main__"'))
+                continue
+            # shoot 3:  ->  try:, retried by the syntax-tree pass
+            if table.get(word) == "try" and at_start(i):
+                colon = statement_colon(i)
+                if colon is not None and colon > i + 1:
+                    if not same_row(i, colon):
+                        raise _syntax_error("keep `shoot n:` on one line", filename, tok, source)
+                    post["retry"][row] = source_text(sig[i + 1], sig[colon - 1])
+                    edits.append(Edit(row, tok.start[1], sig[colon].start[1], "try"))
+                    continue
+            # lore Post:  ->  class Post(slaython.Lore):  (a dataclass)
+            if (word == DATACLASS_WORD and at_start(i) and nxt is not None
+                    and (is_op(i + 2, ":") or is_op(i + 2, "("))):
+                edits.append(Edit(row, tok.start[1], tok.end[1], "class"))
+                base = '__import__("slaython").Lore'
+                if is_op(i + 2, "("):
+                    # after the user's bases (so lore can extend lore), before options
+                    close = closing_paren(i + 2)
+                    k, depth, spot = i + 3, 0, None
+                    while k < close and spot is None:
+                        t = sig[k]
+                        if t.type == tokenize.OP and t.string in ("(", "[", "{"):
+                            depth += 1
+                        elif t.type == tokenize.OP and t.string in (")", "]", "}"):
+                            depth -= 1
+                        elif depth == 0 and t.type == tokenize.NAME and is_op(k + 1, "="):
+                            spot = k
+                        elif depth == 0 and t.type == tokenize.OP and t.string == "**":
+                            spot = k
+                        k += 1
+                    if spot is not None:
+                        at = sig[spot].start
+                        edits.append(Edit(at[0], at[1], at[1], base + ", "))
+                    else:
+                        c = sig[close]
+                        has_bases = close > i + 3 and not is_op(close - 1, ",")
+                        text = (", " if has_bases else "") + base
+                        edits.append(Edit(c.start[0], c.start[1], c.start[1], text))
+                else:
+                    name = sig[i + 1]
+                    edits.append(Edit(name.end[0], name.end[1], name.end[1], f"({base})"))
+                continue
+            # gang Mood: A, B  ->  class Mood(enum.Enum): A, B = auto(), auto()
+            if (word == ENUM_WORD and at_start(i) and nxt is not None
+                    and (is_op(i + 2, ":") or is_op(i + 2, "("))):
+                edits.extend(_gang_edits(i, sig, line_of, table))
+                continue
+            # speedrun:  ->  with slaython._speedrun(line):
+            if word == TIMER_WORD and at_start(i):
+                timer = f'with __import__("slaython")._speedrun({row}'
+                if is_op(i + 1, ":"):
+                    edits.append(Edit(row, tok.start[1], tok.end[1], timer + ")"))
+                    continue
+                colon = statement_colon(i)
+                if colon is not None:
+                    edits.append(Edit(row, tok.start[1], _gap_end(tok, sig[i + 1]), timer + ", "))
+                    c = sig[colon]
+                    edits.append(Edit(c.start[0], c.start[1], c.start[1], ")"))
+                    continue
+            # vibecheck "name":  ->  def test_vibecheck_<line>(__vibecheck__="name"):
+            if word == INLINE_TEST_WORD and at_start(i):
+                after = string_run_end(i + 1)
+                if after is not None and is_op(after, ":"):
+                    edits.append(Edit(row, tok.start[1], _gap_end(tok, sig[i + 1]),
+                                      f"def test_vibecheck_{row}(__vibecheck__="))
+                    c = sig[after]
+                    edits.append(Edit(c.start[0], c.start[1], c.start[1], ")"))
+                    continue
+
+        if not forward and word == "if" and at_start(i) and _is_main_check(sig, i):
+            # if __name__ == "__main__":  ->  maincharacter:
+            edits.append(Edit(tok.start[0], tok.start[1], sig[i + 3].end[1], MAIN_WORD))
+            skip.update({i + 1, i + 2, i + 3})
+            continue
 
         if word in table and (word not in soft or soft_ok(i)):
             edits.append(Edit(tok.start[0], tok.start[1], tok.end[1], table[word]))
@@ -267,7 +366,65 @@ def _plan(source, filename, table, soft, compounds, forward=False):
 
     if constants:
         _check_constants(sig, line_of, constants, filename, source, table)
-    return edits, untouched
+    return edits, untouched, post
+
+
+def _is_main_check(sig, i):
+    toks = sig[i + 1:i + 5]
+    return (len(toks) == 4 and toks[0].string == "__name__" and toks[1].string == "=="
+            and toks[2].type == tokenize.STRING and toks[2].string.strip("\"'") == "__main__"
+            and toks[3].string == ":" and toks[0].start[0] == toks[3].start[0])
+
+
+def _gang_edits(i, sig, line_of, table):
+    """Edits for `gang Name:` / `gang Name(...):` and its member names."""
+    tok, name = sig[i], sig[i + 1]
+    edits = [Edit(tok.start[0], tok.start[1], tok.end[1], "class")]
+    base = '__import__("enum").Enum'
+    j = i + 2
+    if sig[j].string == "(":
+        depth, close = 0, None
+        for k in range(j, len(sig)):
+            if sig[k].string in ("(", "[", "{"):
+                depth += 1
+            elif sig[k].string in (")", "]", "}"):
+                depth -= 1
+                if depth == 0:
+                    close = k
+                    break
+        c = sig[close]
+        edits.append(Edit(c.start[0], c.start[1], c.start[1],
+                          base if close == j + 1 else ", " + base))
+        j = close + 1
+    else:
+        edits.append(Edit(name.end[0], name.end[1], name.end[1], f"({base})"))
+    first, last = line_of[i]
+
+    def members(a, b):
+        """If sig[a..b] is just `NAME, NAME, ...`, add `= auto()` values after it."""
+        toks = sig[a:b + 1]
+        names = [t for t in toks if t.type == tokenize.NAME]
+        only_names = all(t.type == tokenize.NAME or t.string == "," for t in toks)
+        if names and only_names and not any(t.string in table for t in names):
+            end = toks[-1]
+            edits.append(Edit(end.end[0], end.end[1], end.end[1],
+                              f' = __import__("slaython")._gang_values({len(names)})'))
+
+    if j < last:  # one-liner: gang Mood: A, B, C
+        members(j + 1, last)
+        return edits
+    # block form: each indented line that is only names gets values
+    indent = tok.start[1]
+    member_indent = None
+    for a, b in sorted(span for span in set(line_of.values()) if span[0] > last):
+        col = sig[a].start[1]
+        if col <= indent or sig[a].type in (tokenize.NEWLINE, tokenize.ENDMARKER):
+            break
+        if member_indent is None:
+            member_indent = col
+        if col == member_indent:  # not lines inside a method body
+            members(a, b)
+    return edits
 
 
 def _check_constants(sig, line_of, constants, filename, source, table):
@@ -301,20 +458,54 @@ def _apply(source: str, edits: List[Edit]) -> str:
     return "".join(lines)
 
 
-def transpile(source: str, filename: str = "<slay>") -> str:
-    """Turn Slaython source into Python source (same line numbers)."""
-    return transpile_with_edits(source, filename)[0]
+class Translation(NamedTuple):
+    """Slaython translated to Python, plus what the syntax-tree pass still has to do."""
+    python: str
+    edits: List[Edit]
+    retries: Dict[int, str]       # line of `shoot n:` -> source of n
+    pipes: List[Tuple[int, int]]  # (line, Python column) of each `|>`
+
+    @property
+    def needs_tree_pass(self) -> bool:
+        return bool(self.retries or self.pipes)
 
 
 # filename -> edits made to it, so tracebacks can map columns back to slang.
 EDITS_BY_FILE: Dict[str, List[Edit]] = {}
 
 
-def transpile_with_edits(source: str, filename: str = "<slay>") -> Tuple[str, List[Edit]]:
-    """Like transpile(), but also return the edits so columns can be mapped back."""
-    edits, _ = _plan(source, filename, SLANG_TO_PY, SOFT_SLANG, COMPOUND_SLANG, forward=True)
+def translate(source: str, filename: str = "<slay>") -> Translation:
+    """Word-level translation. compiler.py finishes `shoot n:` and `|>`."""
+    edits, _, post = _plan(source, filename, SLANG_TO_PY, SOFT_SLANG, COMPOUND_SLANG, forward=True)
     EDITS_BY_FILE[filename] = edits
-    return _apply(source, edits), edits
+    pipes = [(row, slang_col_to_python(edits, row, col)) for row, col in post["pipes"]]
+    return Translation(_apply(source, edits), edits, post["retry"], pipes)
+
+
+def transpile(source: str, filename: str = "<slay>") -> str:
+    """Turn Slaython source into Python source.
+
+    Line numbers stay the same, except for files that use `shoot n:` or
+    `|>`: those are rebuilt from the syntax tree, which drops comments.
+    """
+    from .compiler import python_source
+    return python_source(source, filename)
+
+
+def transpile_with_edits(source: str, filename: str = "<slay>") -> Tuple[str, List[Edit]]:
+    """Word-level translation plus the edits, so columns can be mapped back."""
+    t = translate(source, filename)
+    return t.python, t.edits
+
+
+def slang_col_to_python(edits: List[Edit], row: int, col: int) -> int:
+    """Map a 0-based column on a Slaython line to the translated Python line."""
+    shift = 0
+    for e in sorted(e for e in edits if e.row == row):
+        if e.end > col or (e.start == e.end and e.start >= col):
+            break
+        shift += len(e.text) - (e.end - e.start)
+    return col + shift
 
 
 def python_col_to_slang(edits: List[Edit], row: int, col: int) -> int:
@@ -338,12 +529,18 @@ def slayify_with_report(source: str, filename: str = "<python>") -> Tuple[str, L
     variable called ``drop``: it would be read back as ``yield``. Rename
     those before running the result.
     """
-    edits, untouched = _plan(source, filename, PY_TO_SLANG, SOFT_PY, {})
+    edits, untouched, _ = _plan(source, filename, PY_TO_SLANG, SOFT_PY, {})
     collisions = []
     for tok in untouched:
         if tok.string in ALL_SLANG_WORDS:
             collisions.append(Collision(tok.start[0], tok.start[1], tok.string))
     return _apply(source, edits), collisions
+
+
+def slayify_count(source: str, filename: str = "<python>") -> Tuple[str, int]:
+    """slayify(), plus how many words it changed."""
+    edits, _, _ = _plan(source, filename, PY_TO_SLANG, SOFT_PY, {})
+    return _apply(source, edits), len(edits)
 
 
 def slayify(source: str, filename: str = "<python>") -> str:

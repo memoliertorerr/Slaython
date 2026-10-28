@@ -9,7 +9,7 @@ import importlib
 import importlib.machinery
 import sys
 
-from .transpiler import transpile_with_edits
+from .compiler import compile_source
 
 SUFFIX = ".slay"
 
@@ -21,8 +21,7 @@ class SlayLoader(importlib.machinery.SourceFileLoader):
         path = self.get_filename(fullname)
         source = self.get_source(fullname)
         # No .pyc caching: a cached foo.slay would share its cache file with foo.py.
-        python, _ = transpile_with_edits(source, filename=path)
-        return compile(python, path, "exec", dont_inherit=True)
+        return compile_source(source, path, "exec")
 
 
 def _supported_loaders():

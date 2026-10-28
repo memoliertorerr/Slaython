@@ -274,8 +274,21 @@ transpile("fr x: serve nocap")                  # 'if x: return True'
 slayify("def f(): return None")                 # 'cook f(): serve ghosted'
 ```
 
-**Jupyter.** `%load_ext slaython`, then start a cell with `%%slay`. `%slay`
-on one line evaluates a single expression.
+**Jupyter.** To write whole notebooks in Slaython, install the kernel:
+
+```sh
+pip install "slaython[jupyter]"
+slaython kernel install
+```
+
+Then pick **Slaython** as the kernel in Jupyter (Notebook, Lab or VS Code).
+Every cell is Slaython, and IPython extras still work: `%time`, `!ls`,
+`yap?` for help, Tab completion (slang included), and the last line of a
+cell shows its value. `slaython kernel list` / `remove` manage it, and
+`--user`, `--sys-prefix` or `--prefix PATH` pick where it goes.
+
+In a normal Python notebook you can also `%load_ext slaython` and start a
+cell with `%%slay`.
 
 See [`examples/interop`](https://github.com/memoliertorerr/Slaython/blob/main/examples/interop) for both directions.
 

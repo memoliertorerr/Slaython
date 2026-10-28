@@ -45,7 +45,11 @@ def python_source(source, filename="<slay>"):
 
 
 def _tree(t: Translation, source, filename, mode):
-    tree = ast.parse(t.python, filename, mode)
+    return finish_tree(ast.parse(t.python, filename, mode), t, source, filename)
+
+
+def finish_tree(tree, t: Translation, source, filename):
+    """Finish `|>` and `shoot n:` on a tree parsed from t.python."""
     if t.pipes:
         tree = _Pipes(set(t.pipes)).visit(tree)
     if t.retries:

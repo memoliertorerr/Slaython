@@ -11,7 +11,7 @@ import types
 
 from .importer import install
 from .compiler import compile_source
-from .transpiler import EDITS_BY_FILE, python_col_to_slang
+from .transpiler import EDITS_BY_FILE, IncompleteSource, python_col_to_slang
 from .vibes import vibe_for
 
 _PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -67,6 +67,10 @@ def read_source(path):
 def print_error(exc, file=None):
     """Print a traceback without Slaython's own frames, then a vibe line."""
     file = file or sys.stderr
+    if isinstance(exc, IncompleteSource):  # unfinished code is just a syntax error here
+        plain = SyntaxError(exc.msg, (exc.filename, exc.lineno, exc.offset, exc.text))
+        plain.__traceback__ = exc.__traceback__
+        exc = plain
     tb = exc.__traceback__
     while tb is not None and os.path.dirname(
             os.path.abspath(tb.tb_frame.f_code.co_filename)) == _PACKAGE_DIR:

@@ -19,6 +19,7 @@ slaython slayify file.py [-o out.slay]     Python -> Slaython
 slaython test [paths...] [-v]         run test_*.slay / *_test.slay tests
 slaython glowup [paths] [--check|--diff]   swap leftover Python keywords for slang
 slaython learn [lesson] [--list|--reset]   interactive tutorial
+slaython kernel install|remove|list   Jupyter kernel for Slaython notebooks
 slaython autoimport on|off|status     let plain python import .slay files
 slaython keywords                     print the slang sheet
 slaython version
@@ -108,6 +109,9 @@ def main(argv=None):
     if cmd == "learn":
         from .learn import main as learn_main
         return learn_main(rest)
+    if cmd == "kernel":
+        from .kernel import main as kernel_main
+        return kernel_main(rest)
     if cmd == "autoimport":
         from .autoimport import main as autoimport_main
         return autoimport_main(rest)

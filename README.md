@@ -48,6 +48,26 @@ slaython autoimport on               # let plain python import .slay files
 slaython keywords                    # print the slang sheet
 ```
 
+## Playground
+
+Try Slaython in your browser, nothing to install:
+https://memoliertorerr.github.io/Slaython/
+
+It runs the real `slaython` package on [Pyodide](https://pyodide.org)
+(Python compiled to WebAssembly). Write code, press Run (Ctrl/Cmd+Enter),
+switch to the Python tab to see the translation, pick an example, or press
+Share to get a link that carries your code.
+
+Preview it locally:
+
+```sh
+python tools/build_playground.py && python -m http.server -d _site
+```
+
+then open http://localhost:8000. The `pages` workflow publishes it on every
+push to `main`. Anything in `slaython/` must stick to the standard library,
+because the playground loads no other packages.
+
 ## Keywords
 
 | Slaython | Python | Why |

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="build" content="__BUILD__">
+<title>Slaython Playground</title>
+<meta name="description" content="Write and run Slaython, Python with gen-z slang keywords, right in your browser. Nothing to install.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css?v=__BUILD__">
+<script defer src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+<script defer src="app.js?v=__BUILD__"></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1><span class="word">Slaython</span> <span class="tag">playground</span></h1>
+    <p class="lede">Python with gen-z slang keywords. Write it, run it, share it. Everything runs in your browser.</p>
+  </div>
+  <nav class="links">
+    <a href="#sheet">Slang sheet</a>
+    <a id="repo-link" hidden>Source</a>
+    <span id="version" class="chip" hidden></span>
+  </nav>
+</header>
+
+<main class="work">
+  <section class="pane pane-code" aria-label="Editor">
+    <div class="bar">
+      <button id="run" class="btn btn-run" type="button" disabled>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>
+        <span id="run-label">Run</span>
+      </button>
+      <kbd id="run-keys" class="keys">Ctrl+Enter</kbd>
+      <label class="picker">
+        <span class="sr">Examples</span>
+        <select id="examples">
+          <option value="">Examples</option>
+        </select>
+      </label>
+      <button id="share" class="btn" type="button">Share</button>
+    </div>
+    <div class="editor" id="editor">
+      <div class="gutter" aria-hidden="true"><pre id="gutter">1</pre></div>
+      <div class="code-wrap">
+        <pre class="hl" aria-hidden="true"><code id="hl"></code></pre>
+        <textarea id="code" wrap="off" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-label="Slaython code" aria-describedby="editor-help"></textarea>
+      </div>
+    </div>
+    <p class="help" id="editor-help">Tab indents, Shift+Tab dedents. Press Esc, then Tab, to move focus out of the editor.</p>
+  </section>
+
+  <section class="pane pane-out" aria-label="Results">
+    <div class="bar">
+      <div class="tabs" role="tablist">
+        <button id="tab-out" role="tab" aria-selected="true" aria-controls="out-panel" type="button">Output</button>
+        <button id="tab-py" role="tab" aria-selected="false" aria-controls="py-panel" type="button">Python</button>
+      </div>
+      <span id="status" class="status" role="status"><span class="dot"></span><span id="status-text">Starting</span></span>
+      <button id="clear" class="btn btn-quiet" type="button">Clear</button>
+    </div>
+    <div class="panel" id="out-panel" role="tabpanel" aria-labelledby="tab-out">
+      <pre id="output" class="output" aria-live="polite"></pre>
+    </div>
+    <div class="panel" id="py-panel" role="tabpanel" aria-labelledby="tab-py" hidden>
+      <pre id="python" class="output python"></pre>
+    </div>
+  </section>
+</main>
+
+<section class="sheet" id="sheet" aria-labelledby="sheet-title">
+  <div class="sheet-head">
+    <h2 id="sheet-title">Slang sheet</h2>
+    <p>Every slang word and the Python it becomes. Plain Python keywords work too.</p>
+    <label class="find">
+      <span class="sr">Find a word</span>
+      <input id="find" type="search" placeholder="Find a word" autocomplete="off" spellcheck="false">
+    </label>
+  </div>
+  <div id="sheet-body" class="sheet-body"></div>
+</section>
+
+<footer class="foot">
+  <p>Runs on <a href="https://pyodide.org">Pyodide</a>, Python compiled to WebAssembly. Your code runs on your device and is never uploaded. Share links carry the code inside the link itself.</p>
+</footer>
+
+<div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

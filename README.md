@@ -341,3 +341,7 @@ workflow runs the tests, builds the package and uploads it to PyPI.
 The word list lives in [`slaython/keywords.py`](https://github.com/memoliertorerr/Slaython/blob/main/slaython/keywords.py).
 Change a word there, and the translator, the CLI sheet and the VS Code
 extension all follow.
+
+## License
+
+[MIT](https://github.com/memoliertorerr/Slaython/blob/main/LICENSE)

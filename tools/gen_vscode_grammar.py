@@ -222,6 +222,7 @@ def package():
                        "Highlighting, hovers, snippets and run commands.",
         "version": __version__,
         "publisher": "memoliertorerr",
+        "license": "MIT",
         "repository": {"type": "git", "url": REPO},
         "homepage": REPO + "#readme",
         "bugs": {"url": REPO + "/issues"},
@@ -323,9 +324,12 @@ def files():
 def main():
     check = "--check" in sys.argv
     stale = []
-    for rel, data in files().items():
+    outputs = {rel: json.dumps(data, indent=2, ensure_ascii=False) + "\n" for rel, data in files().items()}
+    # vsce looks for the license next to package.json, so keep a copy there.
+    with open(os.path.join(ROOT, "LICENSE"), encoding="utf-8") as f:
+        outputs["LICENSE"] = f.read()
+    for rel, text in outputs.items():
         path = os.path.join(OUT, rel)
-        text = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
         current = open(path, encoding="utf-8").read() if os.path.exists(path) else None
         if current == text:
             continue

@@ -2,8 +2,9 @@
   "name": "slaython",
   "displayName": "Slaython",
   "description": "Slaython (.slay) support: Python with gen-z slang keywords. Highlighting, hovers, snippets and run commands.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "memoliertorerr",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/memoliertorerr/Slaython"

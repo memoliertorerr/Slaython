@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,6 +7,8 @@ name = "slaython"
 dynamic = ["version"]
 description = "Python, but the keywords are gen-z slang. Fully interoperable with Python."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 authors = [{ name = "memoliertorerr" }]
 keywords = ["language", "transpiler", "slang", "gen-z", "esolang", "python"]

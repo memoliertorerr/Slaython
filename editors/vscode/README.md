@@ -42,11 +42,9 @@ Or build a `.vsix` and install that:
 
 ```sh
 cd editors/vscode
-npx @vscode/vsce package --skip-license          # writes slaython-<version>.vsix
+npx @vscode/vsce package          # writes slaython-<version>.vsix
 code --install-extension slaython-*.vsix
 ```
-
-`--skip-license` is needed until the repo has a LICENSE file.
 
 ## Publishing (later)
 
@@ -54,7 +52,7 @@ code --install-extension slaython-*.vsix
    <https://marketplace.visualstudio.com/manage> and an Azure DevOps personal
    access token with the **Marketplace (Manage)** scope.
 2. `npx @vscode/vsce login memoliertorerr`
-3. `npx @vscode/vsce publish --skip-license` from this folder.
+3. `npx @vscode/vsce publish` from this folder.
 
 Bump the version in `slaython/__init__.py` first; the generator copies it into
 `package.json`. To also publish on Open VSX: `npx ovsx publish -p <token>`.

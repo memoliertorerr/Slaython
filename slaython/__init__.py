@@ -15,7 +15,7 @@ Handy functions:
 In Jupyter or IPython: `%load_ext slaython`, then `%%slay` cells.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 from .helpers import (  # noqa: E402,F401
     Lore, _attempts, _gang_values, _speedrun, _sus, bedrot, headzortailz, pickone,

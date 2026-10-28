@@ -128,9 +128,9 @@ class Helpers(unittest.TestCase):
 class Vibes(unittest.TestCase):
     def test_no_vibes_flag_and_env(self):
         on = run_cli("-c", "1/0")
-        self.assertIn("💀", on.stderr)
-        self.assertNotIn("💀", run_cli("--no-vibes", "-c", "1/0").stderr)
-        self.assertNotIn("💀", run_cli("-c", "1/0", env_extra={"SLAYTHON_VIBES": "0"}).stderr)
+        self.assertIn("real talk:", on.stderr)
+        self.assertNotIn("real talk:", run_cli("--no-vibes", "-c", "1/0").stderr)
+        self.assertNotIn("real talk:", run_cli("-c", "1/0", env_extra={"SLAYTHON_VIBES": "0"}).stderr)
 
 
 class TestRunner(unittest.TestCase):

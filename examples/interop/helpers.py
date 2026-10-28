@@ -2,4 +2,4 @@
 
 
 def hype(word):
-    return f"{word.upper()}!!! 🔥"
+    return f"{word.upper()}!!!"

@@ -1,4 +1,8 @@
-# Slaython 💅
+# Slaython
+
+[![PyPI](https://img.shields.io/pypi/v/slaython)](https://pypi.org/project/slaython/)
+[![Python](https://img.shields.io/pypi/pyversions/slaython)](https://pypi.org/project/slaython/)
+[![tests](https://github.com/memoliertorerr/Slaython/actions/workflows/tests.yml/badge.svg)](https://github.com/memoliertorerr/Slaython/actions/workflows/tests.yml)
 
 **Python, but the keywords are gen-z slang.** Slaython runs on the normal
 Python interpreter, so every Python library works in it. Python can import
@@ -27,11 +31,15 @@ doomscroll fit in ["ate", ghosted, "mid"]:
 
 ## Install
 
+Slaython is on [PyPI](https://pypi.org/project/slaython/):
+
 ```sh
-pip install .            # from a clone of this repo
+pip install slaython
 ```
 
-Needs Python 3.10 or newer. Nothing else is required.
+Needs Python 3.10 or newer, nothing else. That gives you the `slaython` and
+`slay` commands. To work on Slaython itself, clone the repo and run
+`pip install -e .` instead.
 
 ## Run it
 
@@ -202,7 +210,7 @@ Details:
 - `lore`, `gang`, `speedrun`, `vibecheck` and `maincharacter` only count at
   the start of a line, so you can still use them as names elsewhere.
 
-See [`examples/feed_app.slay`](examples/feed_app.slay) for all of these in one
+See [`examples/feed_app.slay`](https://github.com/memoliertorerr/Slaython/blob/main/examples/feed_app.slay) for all of these in one
 small program.
 
 ## Working with Python
@@ -242,7 +250,7 @@ slayify("def f(): return None")                 # 'cook f(): serve ghosted'
 **Jupyter.** `%load_ext slaython`, then start a cell with `%%slay`. `%slay`
 on one line evaluates a single expression.
 
-See [`examples/interop`](examples/interop) for both directions.
+See [`examples/interop`](https://github.com/memoliertorerr/Slaython/blob/main/examples/interop) for both directions.
 
 ## Testing
 
@@ -280,7 +288,7 @@ a short explanation:
 
 ```
 KeyError: 'k'
-💀 that key got ghosted. it's not in the dict
+real talk: that key got ghosted. it's not in the dict
 ```
 
 Syntax errors also translate keywords. For example, `expected 'except' or
@@ -295,7 +303,7 @@ explanations off with `slaython --no-vibes ...` or `SLAYTHON_VIBES=0`.
   turn whole files into each other. `slayify` warns you when one of your
   Python names (such as a variable called `drop`) is a Slaython word.
 - **REPL.** Run `slaython` with no file. Type `slang` there for the sheet.
-- **VS Code.** [`editors/vscode`](editors/vscode) adds highlighting, hovers
+- **VS Code.** [`editors/vscode`](https://github.com/memoliertorerr/Slaython/blob/main/editors/vscode) adds highlighting, hovers
   that show the Python for each word, snippets (`cook`, `blueprint`, `fr`,
   `shoot`, `lore`, `vibecheck`, ...) and commands: Slaython: Run File (also a
   play button), Show Python, and Run Tests. Set `slaython.command` to
@@ -325,6 +333,11 @@ python -m unittest discover -s tests -t .     # tests
 python tools/gen_vscode_grammar.py            # regenerate the VS Code extension data
 ```
 
-The word list lives in [`slaython/keywords.py`](slaython/keywords.py).
+To release a new version: bump `__version__` in
+[`slaython/__init__.py`](https://github.com/memoliertorerr/Slaython/blob/main/slaython/__init__.py), push, then publish a GitHub
+release tagged `v` plus that version (for example `v0.3.0`). The `publish`
+workflow runs the tests, builds the package and uploads it to PyPI.
+
+The word list lives in [`slaython/keywords.py`](https://github.com/memoliertorerr/Slaython/blob/main/slaython/keywords.py).
 Change a word there, and the translator, the CLI sheet and the VS Code
 extension all follow.

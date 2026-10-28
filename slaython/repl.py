@@ -57,4 +57,4 @@ def interact():
         pass
     sys.ps1, sys.ps2 = "slay> ", "  ... "
     console = SlayConsole(locals={"__name__": "__main__", "slang": _Slang()})
-    console.interact(banner=BANNER, exitmsg="ight, dipping. stay slaying ✌️")
+    console.interact(banner=BANNER, exitmsg="ight, dipping. stay slaying")

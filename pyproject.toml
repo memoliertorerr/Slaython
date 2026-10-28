@@ -1,18 +1,39 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "slaython"
-version = "0.2.0"
+dynamic = ["version"]
 description = "Python, but the keywords are gen-z slang. Fully interoperable with Python."
 readme = "README.md"
 requires-python = ">=3.10"
-keywords = ["language", "transpiler", "slang", "gen-z", "esolang"]
+authors = [{ name = "memoliertorerr" }]
+keywords = ["language", "transpiler", "slang", "gen-z", "esolang", "python"]
 classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Framework :: IPython",
+    "Framework :: Jupyter",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Education",
+    "Topic :: Software Development :: Compilers",
     "Topic :: Software Development :: Interpreters",
 ]
+
+[project.urls]
+Homepage = "https://github.com/memoliertorerr/Slaython"
+Playground = "https://memoliertorerr.github.io/Slaython/"
+Source = "https://github.com/memoliertorerr/Slaython"
+Issues = "https://github.com/memoliertorerr/Slaython/issues"
 
 [project.scripts]
 slaython = "slaython.cli:main"
@@ -20,3 +41,6 @@ slay = "slaython.cli:main"
 
 [tool.setuptools]
 packages = ["slaython"]
+
+[tool.setuptools.dynamic]
+version = { attr = "slaython.__version__" }

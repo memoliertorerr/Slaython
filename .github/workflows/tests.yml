@@ -17,3 +17,20 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: python -m unittest discover -s tests -t . -v
       - run: python tools/gen_vscode_grammar.py --check
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build and check the package
+        run: |
+          python -m pip install build twine
+          python -m build
+          python -m twine check dist/*
+      - name: Install the wheel and run it
+        run: |
+          python -m pip install dist/*.whl
+          cd /tmp && slaython -c 'yap([1, 2] |> howlongisit)'

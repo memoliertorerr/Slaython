@@ -26,7 +26,7 @@ Language support for [Slaython](https://github.com/memoliertorerr/Slaython)
 |---|---|---|
 | `slaython.command` | `slaython` | How to run Slaython, e.g. `python -m slaython` or `"C:\My Python\python.exe" -m slaython`. Split on spaces; quote parts that contain spaces. |
 
-The commands need Slaython installed (`pip install .` from the repo, Python 3.10+).
+The commands need Slaython installed (`pip install slaython`, Python 3.10+).
 In untrusted workspaces, `slaython.command` is only read from your user settings.
 
 ## Install from source

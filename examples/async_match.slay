@@ -10,7 +10,7 @@ lowkey cook fetch_vibe(user, delay):
 cook react(result):
     spill result:
         pov {"mood": "ate"}:
-            serve "slay 💅"
+            serve "slay"
         pov {"mood": "mid"}:
             serve "it's giving average"
         pov {"mood": mood}:

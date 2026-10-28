@@ -36,6 +36,7 @@ _VIBES = {
     "KeyboardInterrupt": "ight, you dipped",
 }
 
+PREFIX = "real talk:"
 _QUOTED = re.compile(r"'([A-Za-z_]+)'")
 
 
@@ -57,7 +58,7 @@ def vibe_for(exc: BaseException) -> str:
         hint = keyword_hint(exc.msg)
         if hint:
             line += f" ({hint})"
-    return f"💀 {line}"
+    return f"{PREFIX} {line}"
 
 
 def keyword_hint(message: str) -> str:

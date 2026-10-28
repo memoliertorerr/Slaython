@@ -1,0 +1,38 @@
+# Hooks other projects can use with pre-commit (https://pre-commit.com):
+#
+#   - repo: https://github.com/memoliertorerr/Slaython
+#     rev: v0.4.0
+#     hooks:
+#       - id: slaython-glowup
+#       - id: slaython-fmt
+#       - id: slaython-lint
+#       - id: slaython-test
+
+- id: slaython-glowup
+  name: slaython glowup
+  description: Fail if .slay files still use plain Python keywords.
+  entry: slaython glowup --check
+  language: python
+  files: \.slay$
+
+- id: slaython-fmt
+  name: slaython fmt
+  description: Format .slay files.
+  entry: slaython fmt
+  language: python
+  files: \.slay$
+
+- id: slaython-lint
+  name: slaython lint
+  description: Catch mistakes in .slay files before running them.
+  entry: slaython lint
+  language: python
+  files: \.slay$
+
+- id: slaython-test
+  name: slaython test
+  description: Run test_*.slay files and vibecheck blocks.
+  entry: slaython test
+  language: python
+  pass_filenames: false
+  always_run: true

@@ -1,14 +1,14 @@
-# drop = yield, lockin = while, dip = break, anyways = continue
+# drop = yield, lockedin = while, dip = break, anyways = continue
 
 cook feed():
     n = 0
-    lockin nocap:
+    lockedin nocap:
         n += 1
         drop f"post #{n}"
 
 
 cook doomscroll_session(limit):
-    doomscroll post canon feed():
+    doomscroll post in feed():
         fr post.endswith("3"):
             anyways          # skip the boring one
         yap("scrolling:", post)

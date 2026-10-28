@@ -18,17 +18,22 @@ OUT = os.path.join(ROOT, "editors", "vscode")
 
 GROUPS = {
     "constant.language.slaython": {"True", "False", "None"},
-    "keyword.operator.logical.slaython": {"and", "or", "not", "is", "in"},
+    "keyword.operator.logical.slaython": {"or", "not", "is"},
     "storage.type.slaython": {"def", "class", "lambda", "async"},
-    "support.function.builtin.slaython": {"print", "input", "super"},
+    "variable.language.self.slaython": {"self"},
+}
+KIND_SCOPES = {
+    "builtin": "support.function.builtin.slaython",
+    "helper": "support.function.builtin.slaython",
+    "syntax": "keyword.control.slaython",
 }
 
 
-def scope_for(python):
+def scope_for(entry):
     for scope, words in GROUPS.items():
-        if python in words:
+        if entry.python in words:
             return scope
-    return "keyword.control.slaython"
+    return KIND_SCOPES.get(entry.kind, "keyword.control.slaython")
 
 
 def words_regex(words):
@@ -39,7 +44,7 @@ def words_regex(words):
 def grammar():
     by_scope = {}
     for s in SLANG:
-        by_scope.setdefault(scope_for(s.python), []).append(s.slang)
+        by_scope.setdefault(scope_for(s), []).append(s.slang)
     keyword_patterns = [
         {"name": scope, "match": r"(?<!\.)" + words_regex(words)}
         for scope, words in sorted(by_scope.items())
@@ -77,6 +82,7 @@ def grammar():
             *keyword_patterns,
             {"name": "constant.numeric.slaython",
              "match": r"\b(0[xX][0-9a-fA-F_]+|0[bB][01_]+|0[oO][0-7_]+|\d[\d_]*(\.[\d_]*)?([eE][+-]?\d+)?j?)\b"},
+            {"name": "keyword.operator.logical.slaython", "match": r"\b(and|in)\b"},
             {"name": "variable.language.self.slaython", "match": r"\b(self|cls)\b"},
             {"name": "entity.name.function.decorator.slaython", "match": r"^\s*@[\w.]+"},
         ],

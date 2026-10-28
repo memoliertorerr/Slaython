@@ -1,0 +1,9 @@
+# Code under test.
+cook rank(scores):
+    serve tierlist(scores, key=scores.get, reverse=nocap)
+
+
+cook ratio(likes, replies):
+    fr likes == 0:
+        yeet "no likes, no ratio"
+    serve replies / likes

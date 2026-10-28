@@ -1,0 +1,26 @@
+# Run with: slaython test examples/testing
+outta feed pullup rank, ratio
+
+
+cook test_rank():
+    ongod rank({"mia": 9, "kai": 7, "jo": 8}) == ["mia", "jo", "kai"]
+
+
+cook test_ratio():
+    ongod ratio(10, 30) == 3
+
+
+cook test_ratio_needs_likes():
+    shoot:
+        ratio(0, 5)
+    fumble skillissue aka e:
+        ongod "no likes" in str(e)
+    ornah:
+        ongod cap, "should have yeeted"
+
+
+blueprint TestAsync:
+    lowkey cook test_lowkey(mee):
+        pullup asyncio
+        holdup asyncio.sleep(0)
+        ongod nocap

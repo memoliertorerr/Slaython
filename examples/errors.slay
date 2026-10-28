@@ -1,4 +1,4 @@
-# tryna = try, crashout = except, periodt = finally, yeet = raise, ong = assert
+# shoot = try, fumble = except, periodt = finally, yeet = raise, ongod = assert
 
 blueprint RatioError(Exception):
     chill
@@ -10,14 +10,14 @@ cook post(likes, replies):
     serve "W post"
 
 
-doomscroll likes, replies canon [(100, 3), (5, 80)]:
-    tryna:
+doomscroll likes, replies in [(100, 3), (5, 80)]:
+    shoot:
         yap(post(likes, replies))
-    crashout RatioError aka e:
+    fumble RatioError aka e:
         yap("L:", e)
     periodt:
         yap("next post...")
 
 score = 10
-ong score > 0, "score can't be negative, that's cap"
-yap("ong check passed")
+ongod score > 0, "score can't be negative, that's cap"
+yap("ongod check passed")

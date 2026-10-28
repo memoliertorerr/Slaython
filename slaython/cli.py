@@ -1,6 +1,7 @@
 """Command line: `slaython file.slay`, `slaython translate`, `slaython slayify`, ..."""
 
 import argparse
+import os
 import sys
 
 from . import __version__
@@ -9,14 +10,18 @@ from .runner import read_source, run_file
 from .transpiler import slayify_with_report, transpile
 
 USAGE = """\
-slaython [file.slay [args...]]        run a file (no file: start the REPL)
+slaython [--no-vibes] [file.slay [args...]]   run a file (no file: start the REPL)
 slaython run file.slay [args...]      run a file
 slaython -c "code" [args...]          run a snippet
 slaython - [args...]                  run code piped in on stdin
 slaython translate file.slay [-o out.py]   Slaython -> Python
 slaython slayify file.py [-o out.slay]     Python -> Slaython
+slaython test [paths...] [-v]         run test_*.slay / *_test.slay tests
+slaython autoimport on|off|status     let plain python import .slay files
 slaython keywords                     print the slang sheet
 slaython version
+
+--no-vibes (or SLAYTHON_VIBES=0) turns off the slang error explanations.
 """
 
 
@@ -71,6 +76,8 @@ def _run_snippet(argv):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
+    while argv and argv[0] in ("--no-vibes", "--vibes"):
+        os.environ["SLAYTHON_VIBES"] = "0" if argv.pop(0) == "--no-vibes" else "1"
     if not argv:
         from .repl import interact
         interact()
@@ -89,6 +96,13 @@ def main(argv=None):
         from .repl import interact
         interact()
         return 0
+    if cmd == "test":
+        from .testing import run_tests
+        verbose = "-v" in rest or "--verbose" in rest
+        return run_tests([a for a in rest if a not in ("-v", "--verbose")], verbose=verbose)
+    if cmd == "autoimport":
+        from .autoimport import main as autoimport_main
+        return autoimport_main(rest)
     if cmd == "translate":
         return _convert(rest, to_python=True)
     if cmd == "slayify":

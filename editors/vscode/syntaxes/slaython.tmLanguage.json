@@ -82,23 +82,31 @@
     },
     {
       "name": "keyword.control.slaython",
-      "match": "(?<!\\.)\\b(doomscroll|ornah\\s+fr|crashout|anyways|periodt|mutuals|lockin|pullup|linkup|cancel|holdup|ornah|chill|serve|tryna|outta|viral|spill|drop|yeet|dip|ong|aka|pov|fr)\\b"
+      "match": "(?<!\\.)\\b(doomscroll|ornah\\s+fr|lockedin|runitfoo|anyways|periodt|mutuals|deadass|fumble|pullup|linkup|cancel|holdup|ornah|chill|serve|shoot|ongod|outta|viral|spill|drop|yeet|dip|aka|pov|fr)\\b"
     },
     {
       "name": "keyword.operator.logical.slaython",
-      "match": "(?<!\\.)\\b(orwhatever|literally|collab|canon|nah)\\b"
+      "match": "(?<!\\.)\\b(literally|orr|nah)\\b"
     },
     {
       "name": "storage.type.slaython",
-      "match": "(?<!\\.)\\b(blueprint|lowkey|cook|npc)\\b"
+      "match": "(?<!\\.)\\b(blueprint|nohead|lowkey|cook)\\b"
     },
     {
       "name": "support.function.builtin.slaython",
-      "match": "(?<!\\.)\\b(yap|hmu|og)\\b"
+      "match": "(?<!\\.)\\b(skillissue|touchgrass|lowkeysus|tierlist|whoisyou|giving|bedrot|goat|flop|yap|hmu|og)\\b"
+    },
+    {
+      "name": "variable.language.self.slaython",
+      "match": "(?<!\\.)\\b(mee)\\b"
     },
     {
       "name": "constant.numeric.slaython",
       "match": "\\b(0[xX][0-9a-fA-F_]+|0[bB][01_]+|0[oO][0-7_]+|\\d[\\d_]*(\\.[\\d_]*)?([eE][+-]?\\d+)?j?)\\b"
+    },
+    {
+      "name": "keyword.operator.logical.slaython",
+      "match": "\\b(and|in)\\b"
     },
     {
       "name": "variable.language.self.slaython",

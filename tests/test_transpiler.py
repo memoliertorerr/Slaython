@@ -123,7 +123,7 @@ class Keywords(unittest.TestCase):
 
     def test_all_hard_keywords_covered(self):
         import keyword
-        covered = {s.python for s in keywords.SLANG}
+        covered = {s.python for s in keywords.SLANG} | set(keywords.KEPT_PYTHON)
         self.assertEqual(set(keyword.kwlist) - covered, set())
 
 

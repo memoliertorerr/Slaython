@@ -23,11 +23,16 @@ class SlayConsole(code.InteractiveConsole):
 
     def showsyntaxerror(self, filename=None, **kwargs):
         super().showsyntaxerror(filename, **kwargs)
-        self.write(vibe_for(sys.last_value) + "\n")
+        self._vibe()
 
     def showtraceback(self):
         super().showtraceback()
-        self.write(vibe_for(sys.last_value) + "\n")
+        self._vibe()
+
+    def _vibe(self):
+        line = vibe_for(sys.last_value)
+        if line:
+            self.write(line + "\n")
 
 
 class _Slang:

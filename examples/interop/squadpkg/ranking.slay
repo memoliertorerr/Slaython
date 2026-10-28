@@ -5,7 +5,7 @@ pullup json
 
 cook rank(scores):
     """Return names sorted by average score, best first."""
-    averages = {name: mean(vals) doomscroll name, vals canon scores.items()}
+    averages = {name: mean(vals) doomscroll name, vals in scores.items()}
     serve sorted(averages, key=averages.get, reverse=nocap)
 
 

@@ -32,5 +32,5 @@ squad = [
     Streamer("kai", 900, "minecraft"),
 ]
 
-doomscroll c canon sorted(squad, key=npc c: c.followers, reverse=nocap):
+doomscroll c in sorted(squad, key=nohead c: c.followers, reverse=nocap):
     yap(c, "->", c.vibe())

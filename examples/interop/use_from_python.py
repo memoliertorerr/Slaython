@@ -17,4 +17,4 @@ print(to_json(scores))
 
 # Slaython snippets inline, too
 slaython.slay('yap("python said hi, slaython said", "W" fr rank(scores)[0] == "mia" ornah "L")')
-print(slaython.slay_eval("[x * 2 doomscroll x canon range(3)]"))
+print(slaython.slay_eval("[x * 2 doomscroll x in range(3)]"))

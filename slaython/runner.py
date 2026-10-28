@@ -94,7 +94,13 @@ def print_error(exc, file=None):
     te = traceback.TracebackException(type(exc), exc, tb)
     _map_columns(te)
     file.write("".join(te.format()))
-    file.write(vibe_for(exc) + "\n")
+    _write_vibe(exc, file)
+
+
+def _write_vibe(exc, file=None):
+    line = vibe_for(exc)
+    if line:
+        (file or sys.stderr).write(line + "\n")
 
 
 def _map_columns(te, seen=None):
@@ -126,7 +132,7 @@ def run_file(path, argv=()):
         source = read_source("-" if from_stdin else path)
     except OSError as exc:
         sys.stderr.write(f"slaython: can't open file {path!r}: {exc.strerror or exc}\n")
-        sys.stderr.write(vibe_for(exc) + "\n")
+        _write_vibe(exc)
         return 2
     try:
         code = compile_slay(source, path)
@@ -145,7 +151,8 @@ def run_file(path, argv=()):
     except SystemExit:
         raise
     except KeyboardInterrupt as exc:
-        sys.stderr.write("\n" + vibe_for(exc) + "\n")
+        sys.stderr.write("\n")
+        _write_vibe(exc)
         return 130
     except BaseException as exc:  # noqa: BLE001 - report everything, like python does
         print_error(exc)

@@ -1,0 +1,37 @@
+# Slaython-only features: slang builtins, runitfoo, deadass, yeet "msg",
+# lowkeysus and bedrot.
+
+deadass MAX_LIKES = 1_000
+
+blueprint Post:
+    cook __init__(mee, caption, likes):
+        mee.caption = caption
+        mee.likes = goat(0, flop(likes, MAX_LIKES))   # clamp to 0..MAX_LIKES
+
+    cook __repr__(mee):
+        serve f"Post({mee.caption!r}, {mee.likes})"
+
+
+cook make_post(caption, likes):
+    fr nah giving(likes, int):
+        yeet f"likes has to be an int, not {whoisyou(likes).__name__}"
+    serve Post(caption, likes)
+
+
+feed = [make_post("fit check", 420), make_post("ratio", 5_000), make_post("mid", -3)]
+yap(tierlist(feed, key=nohead p: p.likes, reverse=nocap))
+
+runitfoo 3:
+    yap("slay")
+
+total = sum(p.likes doomscroll p in feed)
+lowkeysus(total * 2)          # prints: lowkeysus line 28: total * 2 = 2840 (to stderr)
+
+shoot:
+    make_post("oops", "lots")
+fumble skillissue aka e:
+    yap("L:", e)
+
+bedrot(0.01)
+touchgrass()
+yap("you never see this, we touched grass")

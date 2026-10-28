@@ -22,12 +22,12 @@ def run_cli(*args, stdin=""):
 
 class InlineApi(unittest.TestCase):
     def test_slay_runs_in_callers_namespace(self):
-        slaython.slay("result = [x doomscroll x canon range(4) fr x % 2 == 0]")
+        slaython.slay("result = [x doomscroll x in range(4) fr x % 2 == 0]")
         self.assertEqual(locals()["result"], [0, 2])
 
     def test_slay_eval(self):
         self.assertIs(slaython.slay_eval("ghosted literally ghosted"), True)
-        self.assertEqual(slaython.slay_eval("(npc x: x + 1)(1)"), 2)
+        self.assertEqual(slaython.slay_eval("(nohead x: x + 1)(1)"), 2)
 
     def test_full_program(self):
         out = io.StringIO()
@@ -40,10 +40,10 @@ class InlineApi(unittest.TestCase):
                     cook hi(self):
                         serve og().hi() + "b"
                 cook gen():
-                    tryna:
+                    shoot:
                         drop 1
                         yeet KeyError("k")
-                    crashout KeyError:
+                    fumble KeyError:
                         drop 2
                     periodt:
                         drop 3

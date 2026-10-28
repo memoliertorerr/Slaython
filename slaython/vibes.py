@@ -1,5 +1,9 @@
-"""Gen-z explanations printed under a normal Python traceback."""
+"""Gen-z explanations printed under a normal Python traceback.
 
+Turn them off with `slaython --no-vibes ...` or SLAYTHON_VIBES=0.
+"""
+
+import os
 import re
 
 from .keywords import PY_TO_SLANG
@@ -16,7 +20,7 @@ _VIBES = {
     "IndexError": "that index is out of range. touch grass and count again",
     "AttributeError": "that attribute isn't canon. it doesn't exist on this object",
     "RecursionError": "infinite recursion. you're stuck like doomscrolling at 3am",
-    "AssertionError": "ong check failed. that was cap",
+    "AssertionError": "ongod check failed. that was cap",
     "IndentationError": "the indentation is mid. line your blocks up",
     "TabError": "tabs and spaces in one file? pick a side",
     "SyntaxError": "syntax is not it. check your slang",
@@ -35,8 +39,14 @@ _VIBES = {
 _QUOTED = re.compile(r"'([A-Za-z_]+)'")
 
 
+def vibes_enabled() -> bool:
+    return os.environ.get("SLAYTHON_VIBES", "1").strip().lower() not in ("0", "false", "no", "off")
+
+
 def vibe_for(exc: BaseException) -> str:
-    """One-line gen-z explanation for an exception."""
+    """One-line gen-z explanation for an exception ("" when vibes are off)."""
+    if not vibes_enabled():
+        return ""
     for cls in type(exc).__mro__:
         if cls.__name__ in _VIBES:
             line = _VIBES[cls.__name__]

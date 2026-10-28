@@ -1,5 +1,5 @@
 # The classic. yap = print
 yap("hello world, no cap")
 
-name = hmu("what do they call you? ") orwhatever "bestie"
+name = hmu("what do they call you? ") orr "bestie"
 yap(f"ayy {name}, welcome to Slaython")

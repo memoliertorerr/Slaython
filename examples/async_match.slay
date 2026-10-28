@@ -23,7 +23,7 @@ lowkey cook main():
         fetch_vibe("leon", 0.01),
         fetch_vibe("jo", 0.0),
     )
-    doomscroll r canon results:
+    doomscroll r in results:
         yap(r["user"], "->", react(r))
 
 

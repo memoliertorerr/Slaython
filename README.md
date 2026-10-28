@@ -2,6 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/slaython)](https://pypi.org/project/slaython/)
 [![Python](https://img.shields.io/pypi/pyversions/slaython)](https://pypi.org/project/slaython/)
+[![Downloads](https://static.pepy.tech/badge/slaython)](https://pepy.tech/project/slaython)
 [![tests](https://github.com/memoliertorerr/Slaython/actions/workflows/tests.yml/badge.svg)](https://github.com/memoliertorerr/Slaython/actions/workflows/tests.yml)
 
 **Python, but the keywords are gen-z slang.** Slaython runs on the normal

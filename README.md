@@ -316,6 +316,26 @@ W examples/testing/test_feed.slay::test_ratio
 Use `ongod` to check things. Add `-v` to see full tracebacks for Ls.
 `vibecheck "name":` blocks in any `.slay` file are picked up too.
 
+## Lint
+
+`slaython lint` catches mistakes before you run anything: undefined names
+(with a "did you mean"), unused `pullup`s and variables, unreachable code,
+`literally` against a literal, `== ghosted`, `fumble` blocks that swallow
+everything, mutable default arguments and more. Messages use the
+Slaython words.
+
+```sh
+slaython lint                      # every .slay file under this folder
+slaython lint src/ app.slay        # specific files or folders
+slaython lint --select SL1,SL201   # only these checks (codes or prefixes)
+slaython lint --ignore SL103       # everything except these
+slaython lint --codes              # list every check
+```
+
+Each problem prints as `path:line:col: CODE message`; it exits 1 when it
+finds something. Add `# lint: ignore` (or `# lint: ignore[SL201]`) at the
+end of a line to silence it.
+
 ## Glow up
 
 `slaython glowup` swaps plain Python left in `.slay` files for slang

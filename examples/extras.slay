@@ -34,4 +34,4 @@ fumble skillissue aka e:
 
 bedrot(0.01)
 touchgrass()
-yap("you never see this, we touched grass")
+yap("you never see this, we touched grass")  # lint: ignore[SL201]

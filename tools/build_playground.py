@@ -6,6 +6,7 @@
 
 The site holds the page from playground/, every slaython/*.py file,
 examples/*.slay and a manifest.json that the page reads at start-up.
+It also builds the docs (docs/*.md) into docs/, see tools/build_docs.py.
 """
 
 import argparse
@@ -18,6 +19,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import build_docs  # noqa: E402
 
 from slaython import __version__  # noqa: E402
 from slaython.keywords import KEPT_PYTHON, SLANG  # noqa: E402
@@ -125,6 +129,7 @@ def build(out):
     }
     (out / "manifest.json").write_text(json.dumps(manifest, indent=1, ensure_ascii=False) + "\n",
                                        encoding="utf-8")
+    manifest["docs"] = len(build_docs.build(out))
     return out, manifest
 
 
@@ -135,7 +140,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
     out, manifest = build(args.out)
     print(f"built playground in {out}: {len(manifest['package'])} package files, "
-          f"{len(manifest['examples'])} examples, {len(manifest['keywords'])} words")
+          f"{len(manifest['examples'])} examples, {len(manifest['keywords'])} words, "
+          f"{manifest['docs']} docs pages")
 
 
 if __name__ == "__main__":

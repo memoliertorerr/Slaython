@@ -70,9 +70,20 @@ class KeywordTranslation(unittest.TestCase):
         for src in ("spill = 3", "spill.x = 1", "pov: int = 3", "yap(spill, pov)", "spill(1)"):
             self.assertEqual(transpile(src), src.replace("yap", "print"))
 
-    @unittest.skipIf(sys.version_info < (3, 12), "f-strings are tokenized as one token before 3.12")
     def test_fstring_expressions(self):
         self.assertEqual(transpile('f"{a fr b ornah c} fr"'), 'f"{a if b else c} fr"')
+        self.assertEqual(transpile("f'{{x}} {howlongisit(xs)!r:>{goat(1, 2)}}'"),
+                         "f'{{x}} {len(xs)!r:>{max(1, 2)}}'")
+        self.assertEqual(transpile('rf"{nah cap}"'), 'rf"{not False}"')
+        self.assertEqual(transpile('f"""a\n{yap(\n  nocap)} {cap}"""'), 'f"""a\n{print(\n  True)} {False}"""')
+        self.assertEqual(transpile('f"{d[\'fr\']} {\'nocap\'}"'), 'f"{d[\'fr\']} {\'nocap\'}"')
+        self.assertEqual(transpile('"{nocap}"'), '"{nocap}"')
+
+    def test_fstring_pipe_runs(self):
+        import slaython
+        ns = {}
+        slaython.slay('xs = [1, 2]\nmsg = f"{xs |> howlongisit} {[i doomscroll i in xs]}"', ns)
+        self.assertEqual(ns["msg"], "2 [1, 2]")
 
 
 class Slayify(unittest.TestCase):

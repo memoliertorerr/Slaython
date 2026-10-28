@@ -221,6 +221,12 @@ def _plan(source, filename, table, soft, compounds, forward=False, aliases=None)
             post["pipes"].append(tok.start)
             skip.add(i + 1)
             continue
+        if tok.type == tokenize.STRING and _FSTRING_START is None:
+            # Python 3.10/3.11 read a whole f-string as one token
+            sub_edits, sub_post = _fstring_edits(tok, filename, table, soft, compounds, forward, aliases)
+            edits.extend(sub_edits)
+            post["pipes"].extend(sub_post)
+            continue
         if tok.type != tokenize.NAME:
             continue
         word = tok.string
@@ -390,6 +396,99 @@ def _plan(source, filename, table, soft, compounds, forward=False, aliases=None)
     if constants:
         _check_constants(sig, line_of, constants, filename, source, table)
     return edits, untouched, post
+
+
+def _fstring_fields(body):
+    """(start, end) of every `{...}` expression in an f-string body, nested ones too."""
+    fields, i = [], 0
+    while i < len(body):
+        if body.startswith("{{", i) or body.startswith("}}", i):
+            i += 2
+            continue
+        if body[i] != "{":
+            i += 1
+            continue
+        start = j = i + 1
+        depth, quote = 0, None
+        while j < len(body):
+            ch = body[j]
+            if quote:
+                if ch == "\\":
+                    j += 1
+                elif body.startswith(quote, j):
+                    j += len(quote) - 1
+                    quote = None
+            elif ch in "\"'":
+                quote = body[j:j + 3] if body[j:j + 3] in ('"""', "'''") else ch
+                j += len(quote) - 1
+            elif ch in "([{":
+                depth += 1
+            elif ch in ")]" or (ch == "}" and depth):
+                depth -= 1
+            elif depth == 0 and (ch == "}" or ch == ":" or (ch == "!" and body[j + 1:j + 2] != "=")):
+                break
+            j += 1
+        fields.append((start, j))
+        if j < len(body) and body[j] in ":!":  # conversion and format spec may hold {fields}
+            k, depth = j, 0
+            while k < len(body):
+                if body[k] == "{":
+                    depth += 1
+                elif body[k] == "}":
+                    if depth == 0:
+                        break
+                    depth -= 1
+                k += 1
+            for a, b in _fstring_fields(body[j:k]):
+                fields.append((j + a, j + b))
+            j = k
+        i = j + 1
+    return fields
+
+
+def _fstring_edits(tok, filename, table, soft, compounds, forward, aliases):
+    """Edits for slang inside one f-string token (Python 3.10/3.11)."""
+    text = tok.string
+    prefix_len = len(text) - len(text.lstrip("rRbBuUfF"))
+    if "f" not in text[:prefix_len].lower():
+        return [], []
+    quote = text[prefix_len:prefix_len + 3]
+    if quote not in ('"""', "'''"):
+        quote = text[prefix_len]
+    body_at = prefix_len + len(quote)
+    body = text[body_at:len(text) - len(quote)]
+
+    def where(offset):
+        """(row, col) of an offset into the token's text."""
+        before = text[:offset]
+        newlines = before.count("\n")
+        if not newlines:
+            return tok.start[0], tok.start[1] + offset
+        return tok.start[0] + newlines, offset - before.rfind("\n") - 1
+
+    edits, pipes = [], []
+    for a, b in _fstring_fields(body):
+        expr = body[a:b]
+        if not expr.strip():
+            continue
+        try:
+            sub, _, post = _plan("(" + expr + ")", filename, table, soft, compounds, forward, aliases)
+        except SyntaxError:
+            continue  # leave odd fields to Python's own error
+        lines = io.StringIO(expr).readlines() or [""]
+        line_starts = [0]
+        for line in lines:
+            line_starts.append(line_starts[-1] + len(line))
+
+        def offset_of(row, col):
+            return body_at + a + line_starts[row - 1] + col - (1 if row == 1 else 0)
+
+        for e in sub:
+            row, col = where(offset_of(e.row, e.start))
+            edits.append(Edit(row, col, col + (e.end - e.start), e.text))
+        for row, col in post["pipes"]:
+            pipes.append(where(offset_of(row, col)))
+    return edits, pipes
 
 
 def _is_main_check(sig, i):

@@ -76,9 +76,21 @@ def print_error(exc, file=None):
             os.path.abspath(tb.tb_frame.f_code.co_filename)) == _PACKAGE_DIR:
         tb = tb.tb_next
     te = traceback.TracebackException(type(exc), exc, tb)
+    if isinstance(exc, SyntaxError):
+        # A syntax error is about the source, not the translator's own frames.
+        te.stack = traceback.StackSummary.from_list(
+            [fs for fs in te.stack if not _internal(fs.filename)])
     _map_columns(te)
     file.write("".join(te.format()))
     _write_vibe(exc, file)
+
+
+_STDLIB = os.path.dirname(os.path.abspath(traceback.__file__))
+
+
+def _internal(filename):
+    path = os.path.abspath(filename)
+    return os.path.dirname(path) in (_PACKAGE_DIR, _STDLIB)
 
 
 def _write_vibe(exc, file=None):

@@ -29,6 +29,9 @@ doomscroll fit in ["ate", ghosted, "mid"]:
     yap(Bestie(choice(["mia", "kai"])).rate(fit))
 ```
 
+**Docs:** https://memoliertorerr.github.io/Slaython/docs/ ·
+**Playground:** https://memoliertorerr.github.io/Slaython/
+
 ## Install
 
 Slaython is on [PyPI](https://pypi.org/project/slaython/):
@@ -66,13 +69,13 @@ It runs the real `slaython` package on [Pyodide](https://pyodide.org)
 switch to the Python tab to see the translation, pick an example, or press
 Share to get a link that carries your code.
 
-Preview it locally:
+Preview it locally (this also builds the docs from `docs/*.md`):
 
 ```sh
 python tools/build_playground.py && python -m http.server -d _site
 ```
 
-then open http://localhost:8000. The `pages` workflow publishes it on every
+then open http://localhost:8000 (docs at http://localhost:8000/docs/). The `pages` workflow publishes it on every
 push to `main`. Anything in `slaython/` must stick to the standard library,
 because the playground loads no other packages.
 
@@ -360,9 +363,6 @@ explanations off with `slaython --no-vibes ...` or `SLAYTHON_VIBES=0`.
 - **`slaython translate` on files with `shoot n:` or `|>`** rebuilds the
   Python from the syntax tree, so comments and blank lines are dropped in
   that output. Running the file is not affected.
-- **f-strings on Python 3.10 and 3.11:** slang inside `{...}` is not
-  translated, because those versions read an f-string as one token. Use
-  Python 3.12+ or Python keywords inside f-string braces there.
 - If a module exists as both `foo.py` and `foo.slay` in the same folder,
   `foo.py` wins.
 

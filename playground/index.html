@@ -22,6 +22,10 @@
     <h1><span class="word">Slaython</span> <span class="tag">playground</span></h1>
     <p class="lede">Python with gen-z slang keywords. Write it, run it, share it. Everything runs in your browser.</p>
   </div>
+  <div class="modes" role="tablist" aria-label="Mode">
+    <button id="mode-run" role="tab" type="button" aria-selected="true" aria-controls="runner">Run</button>
+    <button id="mode-translate" role="tab" type="button" aria-selected="false" aria-controls="translator">Translate</button>
+  </div>
   <nav class="links">
     <a href="docs/">Docs</a>
     <a href="#sheet">Slang sheet</a>
@@ -30,7 +34,7 @@
   </nav>
 </header>
 
-<main class="work">
+<main class="work" id="runner">
   <section class="pane pane-code" aria-label="Editor">
     <div class="bar">
       <button id="run" class="btn btn-run" type="button" disabled>
@@ -71,6 +75,39 @@
     <div class="panel" id="py-panel" role="tabpanel" aria-labelledby="tab-py" hidden>
       <pre id="python" class="output python"></pre>
     </div>
+  </section>
+</main>
+
+<main class="work translator" id="translator" hidden>
+  <section class="pane" aria-label="Translate from">
+    <div class="bar">
+      <span class="side-label">From <strong id="t-from">Slaython</strong></span>
+      <button id="t-swap" class="btn" type="button" title="Swap direction">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3 1 6l3 3M1 6h11M12 7l3 3-3 3M15 10H4"/></svg>
+        <span>Swap</span>
+      </button>
+      <button id="t-clear" class="btn btn-quiet" type="button">Clear</button>
+    </div>
+    <div class="editor" id="t-editor">
+      <div class="gutter" aria-hidden="true"><pre id="t-gutter" class="gutter-nums">1</pre></div>
+      <div class="code-wrap">
+        <pre class="hl" aria-hidden="true"><code id="t-hl"></code></pre>
+        <textarea id="t-code" class="code-input" wrap="off" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-label="Code to translate"></textarea>
+      </div>
+    </div>
+    <p class="help">Type or paste on this side. The other side updates as you type.</p>
+  </section>
+
+  <section class="pane" aria-label="Translation">
+    <div class="bar">
+      <span class="side-label">To <strong id="t-to">Python</strong></span>
+      <span id="t-status" class="status" role="status"><span class="dot"></span><span id="t-status-text">Waiting for Python</span></span>
+      <button id="t-copy" class="btn" type="button">Copy</button>
+    </div>
+    <div class="panel">
+      <pre id="t-out" class="output python" aria-live="polite"></pre>
+    </div>
+    <p id="t-note" class="help t-note" hidden></p>
   </section>
 </main>
 

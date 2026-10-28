@@ -12,6 +12,7 @@ import types
 
 from slaython import transpile
 from slaython.runner import compile_slay, print_error
+from slaython.transpiler import slayify_with_report, translate as _translate
 
 FILENAME = "main.slay"
 
@@ -86,3 +87,38 @@ def translate(source):
         buf = io.StringIO()
         _report(exc, buf)
         return [False, buf.getvalue()]
+
+
+def to_python(source):
+    """Translator view, Slaython -> Python. Returns [ok, text, note]."""
+    try:
+        text = transpile(source, FILENAME)
+    except Exception as exc:  # noqa: BLE001
+        buf = io.StringIO()
+        _report(exc, buf)
+        return [False, buf.getvalue(), ""]
+    note = ""
+    try:
+        if _translate(source, FILENAME).needs_tree_pass:
+            note = "Rebuilt from the syntax tree because of |> or shoot n:, so comments are left out."
+    except Exception:  # noqa: BLE001 - the text above already worked
+        pass
+    return [True, text, note]
+
+
+def to_slang(source):
+    """Translator view, Python -> Slaython. Returns [ok, text, note]."""
+    try:
+        text, clashes = slayify_with_report(source, "main.py")
+    except Exception as exc:  # noqa: BLE001
+        buf = io.StringIO()
+        _report(exc, buf)
+        return [False, buf.getvalue(), ""]
+    note = ""
+    if clashes:
+        names = sorted({c.name for c in clashes})
+        lines = ", ".join(str(c.row) for c in clashes[:5])
+        note = (f"Heads up: {', '.join(names)} {'is a Slaython word' if len(names) == 1 else 'are Slaython words'}"
+                f" (line {lines}). Rename {'it' if len(names) == 1 else 'them'} so the Slaython means the same thing.")
+    return [True, text, note]
+

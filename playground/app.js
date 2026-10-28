@@ -192,8 +192,7 @@
   }
 
   // Replace [start, end) with text, keeping the browser's undo history when possible.
-  function replaceRange(start, end, text, selStart, selEnd) {
-    const ta = els.code;
+  function replaceRange(start, end, text, selStart, selEnd, ta = els.code) {
     ta.focus();
     ta.setSelectionRange(start, end);
     let done = false;
@@ -227,7 +226,7 @@
   let tabReleased = false;
 
   function onKeyDown(e) {
-    const ta = els.code;
+    const ta = e.currentTarget;
     const { selectionStart: s, selectionEnd: t, value } = ta;
     if (e.key === "Escape") { tabReleased = true; return; }
     if (e.key === "Tab" && !e.ctrlKey && !e.metaKey && !e.altKey) {
@@ -237,7 +236,7 @@
       if (!e.shiftKey && !multi) {
         const col = s - (value.lastIndexOf("\n", s - 1) + 1);
         const pad = " ".repeat(4 - (col % 4));
-        replaceRange(s, t, pad, s + pad.length);
+        replaceRange(s, t, pad, s + pad.length, undefined, ta);
         return;
       }
       const [from, to] = lineBounds(value, s, t);
@@ -259,7 +258,7 @@
       if (changed === value.slice(from, to)) return;
       const total = changed.length - (to - from);
       const newStart = Math.max(from, s + firstDelta);
-      replaceRange(from, to, changed, multi ? from : newStart, multi ? to + total : Math.max(from, t + firstDelta));
+      replaceRange(from, to, changed, multi ? from : newStart, multi ? to + total : Math.max(from, t + firstDelta), ta);
       return;
     }
     tabReleased = false;
@@ -269,7 +268,7 @@
       let indent = before.match(/^[ \t]*/)[0];
       if (/:\s*(#.*)?$/.test(before)) indent += INDENT;
       e.preventDefault();
-      replaceRange(s, t, "\n" + indent, s + 1 + indent.length);
+      replaceRange(s, t, "\n" + indent, s + 1 + indent.length, undefined, ta);
       return;
     }
     if (e.key === "Backspace" && s === t && s > 0) {
@@ -278,7 +277,7 @@
       if (before.length && /^ +$/.test(before)) {
         e.preventDefault();
         const n = before.length % 4 || 4;
-        replaceRange(s - n, s, "", s - n);
+        replaceRange(s - n, s, "", s - n, undefined, ta);
       }
     }
   }
@@ -500,6 +499,183 @@
     els.sheet.innerHTML = html || `<p class="sheet-empty">No word matches "${escapeHtml(filter)}".</p>`;
   }
 
+  // ---------- translator: Slaython <-> Python, live ----------
+
+  const T_TEXT_KEY = "slaython-translator-text";
+  const T_DIR_KEY = "slaython-translator-direction";
+  const T_SAMPLE = [
+    "blueprint Bestie:",
+    "    cook __init__(mee, name, fits=ghosted):",
+    "        mee.name = name",
+    "        mee.fits = fits orr []",
+    "",
+    "    cook rate(mee, fit):",
+    "        fr fit in mee.fits:",
+    '            serve f"{mee.name} ate that, no cap"',
+    "        ornah fr fit literally ghosted:",
+    '            serve "got ghosted"',
+    "        ornah:",
+    '            serve "lowkey mid"',
+    "",
+    "doomscroll fit in [\"slay\", ghosted, \"mid\"]:",
+    '    yap(Bestie("mia", ["slay"]).rate(fit))',
+    "",
+  ].join("\n");
+
+  const tr = {
+    code: $("t-code"), hl: $("t-hl"), gutter: $("t-gutter"), editor: $("t-editor"),
+    out: $("t-out"), note: $("t-note"), from: $("t-from"), to: $("t-to"),
+    swap: $("t-swap"), copy: $("t-copy"), clear: $("t-clear"),
+    status: $("t-status"), statusText: $("t-status-text"),
+    toSlang: store.get(T_DIR_KEY) === "py2slay",   // false: Slaython -> Python
+    lastOut: "",
+    timer: 0,
+  };
+
+  function trStatus(state, text) {
+    tr.status.dataset.state = state;
+    tr.statusText.textContent = text;
+  }
+
+  function trSync() {
+    const src = tr.code.value;
+    try {
+      tr.hl.innerHTML = highlight(src, !tr.toSlang) + "\n";
+    } catch (err) {
+      tr.editor.classList.add("plain");
+      console.error(err);
+    }
+    const lines = src.split("\n").length;
+    if (tr.gutter.dataset.lines !== String(lines)) {
+      tr.gutter.dataset.lines = String(lines);
+      let g = "";
+      for (let i = 1; i <= lines; i++) g += i + "\n";
+      tr.gutter.textContent = g;
+    }
+    trScroll();
+  }
+
+  function trScroll() {
+    const { scrollTop, scrollLeft } = tr.code;
+    tr.hl.parentElement.style.transform = `translate(${-scrollLeft}px, ${-scrollTop}px)`;
+    tr.gutter.style.transform = `translateY(${-scrollTop}px)`;
+  }
+
+  function trLabels() {
+    tr.from.textContent = tr.toSlang ? "Python" : "Slaython";
+    tr.to.textContent = tr.toSlang ? "Slaython" : "Python";
+    tr.code.setAttribute("aria-label", tr.toSlang ? "Python code to translate" : "Slaython code to translate");
+  }
+
+  function trTranslate() {
+    clearTimeout(tr.timer);
+    if (!api) {
+      tr.out.innerHTML = '<span class="hint">The translator works once Python has loaded.</span>';
+      trStatus("loading", "Waiting for Python");
+      return;
+    }
+    const src = tr.code.value;
+    if (!src.trim()) {
+      tr.out.innerHTML = `<span class="hint">Type ${tr.toSlang ? "Python" : "Slaython"} on the left.</span>`;
+      tr.note.hidden = true;
+      tr.lastOut = "";
+      trStatus("idle", "Ready");
+      return;
+    }
+    const [ok, text, note] = callPy(tr.toSlang ? api.to_slang : api.to_python, src);
+    if (ok) {
+      tr.lastOut = text;
+      tr.out.innerHTML = highlight(text, tr.toSlang);
+      trStatus("ok", "Translated");
+    } else {
+      tr.out.innerHTML = `<span class="err">${escapeHtml(text)}</span>`;
+      trStatus("error", "Can't translate this yet");
+    }
+    tr.note.hidden = !note;
+    tr.note.textContent = note || "";
+    tr.note.classList.toggle("warn", note.startsWith("Heads up"));
+  }
+
+  function trQueue() {
+    clearTimeout(tr.timer);
+    tr.timer = setTimeout(trTranslate, 120);
+  }
+
+  function trInput() {
+    trSync();
+    trQueue();
+    store.set(T_TEXT_KEY, tr.code.value);
+  }
+
+  function trSwap() {
+    // Keep working on the same program: the translation becomes the new input.
+    const carry = tr.lastOut;
+    tr.toSlang = !tr.toSlang;
+    store.set(T_DIR_KEY, tr.toSlang ? "py2slay" : "slay2py");
+    trLabels();
+    if (carry) tr.code.value = carry;
+    store.set(T_TEXT_KEY, tr.code.value);
+    trSync();
+    trTranslate();
+    tr.code.focus();
+  }
+
+  async function trCopy() {
+    if (!tr.lastOut) return;
+    try {
+      await navigator.clipboard.writeText(tr.lastOut);
+      toast("Copied");
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(tr.out);
+      const sel = getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      toast("Selected. Press Ctrl+C to copy.");
+    }
+  }
+
+  function showMode(mode) {
+    const translate = mode === "translate";
+    $("mode-run").setAttribute("aria-selected", String(!translate));
+    $("mode-translate").setAttribute("aria-selected", String(translate));
+    $("runner").hidden = translate;
+    $("translator").hidden = !translate;
+    if (translate) {
+      if (!tr.code.value) tr.code.value = tr.toSlang ? "" : (els.code.value || T_SAMPLE);
+      trLabels();
+      trSync();
+      trTranslate();
+      if (location.hash !== "#translate") history.replaceState(null, "", "#translate");
+    } else if (location.hash === "#translate") {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+  }
+
+  function setupTranslator() {
+    tr.code.value = store.get(T_TEXT_KEY) || "";
+    trLabels();
+    tr.code.addEventListener("input", trInput);
+    tr.code.addEventListener("scroll", trScroll, { passive: true });
+    tr.code.addEventListener("keydown", onKeyDown);
+    tr.swap.addEventListener("click", trSwap);
+    tr.copy.addEventListener("click", trCopy);
+    tr.clear.addEventListener("click", () => {
+      tr.code.value = "";
+      trInput();
+      tr.code.focus();
+    });
+    $("mode-run").addEventListener("click", () => showMode("run"));
+    $("mode-translate").addEventListener("click", () => showMode("translate"));
+    $("mode-run").parentElement.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      const toTranslate = $("mode-run").getAttribute("aria-selected") === "true";
+      showMode(toTranslate ? "translate" : "run");
+      $(toTranslate ? "mode-translate" : "mode-run").focus();
+    });
+    if (location.hash === "#translate") showMode("translate");
+  }
+
   // ---------- boot ----------
 
   async function bootPython() {
@@ -531,7 +707,7 @@
     els.code.addEventListener("scroll", syncScroll, { passive: true });
     els.code.addEventListener("keydown", onKeyDown);
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); run(); }
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && !$("runner").hidden) { e.preventDefault(); run(); }
     });
     els.run.addEventListener("click", run);
     els.clear.addEventListener("click", clearOutput);
@@ -553,10 +729,12 @@
     });
     els.find.addEventListener("input", () => renderSheet(els.find.value));
     window.addEventListener("hashchange", () => {
+      if (location.hash === "#translate") { showMode("translate"); return; }
       const shared = codeFromHash();
-      if (shared !== null) setCode(shared);
+      if (shared !== null) { showMode("run"); setCode(shared); }
     });
 
+    setupTranslator();
     hint("Python is loading. You can start typing.");
     setStatus("loading", "Loading");
 
@@ -600,6 +778,7 @@
     const touch = window.matchMedia && matchMedia("(pointer: coarse)").matches;
     hint(touch ? "Ready. Press Run." : `Ready. Press Run or ${IS_MAC ? "Cmd" : "Ctrl"}+Enter.`);
     if (!els.pyPanel.hidden) translateNow();
+    if (!$("translator").hidden) trTranslate();
   }
 
   boot();

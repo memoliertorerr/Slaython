@@ -69,6 +69,10 @@ It runs the real `slaython` package on [Pyodide](https://pyodide.org)
 switch to the Python tab to see the translation, pick an example, or press
 Share to get a link that carries your code.
 
+Switch to **Translate** for a live translator: type Slaython on one side
+and the Python appears on the other as you type. **Swap** flips the
+direction (Python to Slaython) and carries your code across.
+
 Preview it locally (this also builds the docs from `docs/*.md`):
 
 ```sh

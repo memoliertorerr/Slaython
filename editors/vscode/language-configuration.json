@@ -45,16 +45,51 @@
       ]
     }
   ],
+  "surroundingPairs": [
+    [
+      "{",
+      "}"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "(",
+      ")"
+    ],
+    [
+      "\"",
+      "\""
+    ],
+    [
+      "'",
+      "'"
+    ]
+  ],
+  "folding": {
+    "offSide": true,
+    "markers": {
+      "start": "^\\s*#\\s*region\\b",
+      "end": "^\\s*#\\s*endregion\\b"
+    }
+  },
   "onEnterRules": [
     {
       "beforeText": "^\\s*.*:\\s*(#.*)?$",
       "action": {
         "indent": "indent"
       }
+    },
+    {
+      "beforeText": "^\\s+(anyways|chill|dip|serve|yeet)\\b.*$",
+      "action": {
+        "indent": "outdent"
+      }
     }
   ],
   "indentationRules": {
     "increaseIndentPattern": "^\\s*.*:\\s*(#.*)?$",
-    "decreaseIndentPattern": "^\\s*(ornah|crashout|periodt)\\b.*:"
+    "decreaseIndentPattern": "^\\s*(fumble|ornah|periodt)\\b.*:"
   }
 }

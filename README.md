@@ -275,7 +275,11 @@ explanations off with `slaython --no-vibes ...` or `SLAYTHON_VIBES=0`.
   turn whole files into each other. `slayify` warns you when one of your
   Python names (such as a variable called `drop`) is a Slaython word.
 - **REPL.** Run `slaython` with no file. Type `slang` there for the sheet.
-- **VS Code highlighting.** See [`editors/vscode`](editors/vscode).
+- **VS Code.** [`editors/vscode`](editors/vscode) adds highlighting, hovers
+  that show the Python for each word, snippets (`cook`, `blueprint`, `fr`,
+  `shoot`, `lore`, `vibecheck`, ...) and commands: Slaython: Run File (also a
+  play button), Show Python, and Run Tests. Set `slaython.command` to
+  `python -m slaython` if the `slaython` script isn't on your PATH.
 
 ## Things to know
 
@@ -298,9 +302,9 @@ explanations off with `slaython --no-vibes ...` or `SLAYTHON_VIBES=0`.
 
 ```sh
 python -m unittest discover -s tests -t .     # tests
-python tools/gen_vscode_grammar.py            # regenerate the VS Code grammar
+python tools/gen_vscode_grammar.py            # regenerate the VS Code extension data
 ```
 
 The word list lives in [`slaython/keywords.py`](slaython/keywords.py).
 Change a word there, and the translator, the CLI sheet and the VS Code
-grammar all follow.
+extension all follow.

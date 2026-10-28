@@ -1,0 +1,422 @@
+{
+  "version": "0.2.0",
+  "words": [
+    {
+      "slang": "nocap",
+      "python": "True",
+      "meaning": "no lie, for real",
+      "why": "no cap = it's true",
+      "kind": "keyword"
+    },
+    {
+      "slang": "cap",
+      "python": "False",
+      "meaning": "a lie",
+      "why": "cap = it's false",
+      "kind": "keyword"
+    },
+    {
+      "slang": "ghosted",
+      "python": "None",
+      "meaning": "someone vanished on you",
+      "why": "nothing is there anymore",
+      "kind": "keyword"
+    },
+    {
+      "slang": "orr",
+      "python": "or",
+      "meaning": "or, stretched out",
+      "why": "this orr that",
+      "kind": "keyword"
+    },
+    {
+      "slang": "nah",
+      "python": "not",
+      "meaning": "no",
+      "why": "flips it to the opposite",
+      "kind": "keyword"
+    },
+    {
+      "slang": "literally",
+      "python": "is",
+      "meaning": "actually, for real (identity)",
+      "why": "x literally ghosted = x is None",
+      "kind": "keyword"
+    },
+    {
+      "slang": "fr",
+      "python": "if",
+      "meaning": "for real?",
+      "why": "fr x > 5: = is x > 5, for real?",
+      "kind": "keyword"
+    },
+    {
+      "slang": "ornah fr",
+      "python": "elif",
+      "meaning": "or nah... but for real?",
+      "why": "the else branch that checks again",
+      "kind": "compound"
+    },
+    {
+      "slang": "ornah",
+      "python": "else",
+      "meaning": "...or not",
+      "why": "what happens if it's a nah",
+      "kind": "keyword"
+    },
+    {
+      "slang": "doomscroll",
+      "python": "for",
+      "meaning": "scrolling through post after post",
+      "why": "goes through items one by one",
+      "kind": "keyword"
+    },
+    {
+      "slang": "lockedin",
+      "python": "while",
+      "meaning": "focused and not stopping",
+      "why": "stays locked in while the condition holds",
+      "kind": "keyword"
+    },
+    {
+      "slang": "dip",
+      "python": "break",
+      "meaning": "leave, bounce",
+      "why": "dip out of the loop",
+      "kind": "keyword"
+    },
+    {
+      "slang": "anyways",
+      "python": "continue",
+      "meaning": "moving on (after an awkward moment)",
+      "why": "skip the rest, on to the next",
+      "kind": "keyword"
+    },
+    {
+      "slang": "chill",
+      "python": "pass",
+      "meaning": "relax, do nothing",
+      "why": "do nothing on purpose",
+      "kind": "keyword"
+    },
+    {
+      "slang": "cook",
+      "python": "def",
+      "meaning": "make something great (let him cook)",
+      "why": "cook up a function",
+      "kind": "keyword"
+    },
+    {
+      "slang": "serve",
+      "python": "return",
+      "meaning": "deliver, serve it up",
+      "why": "serve what you cooked",
+      "kind": "keyword"
+    },
+    {
+      "slang": "nohead",
+      "python": "lambda",
+      "meaning": "no head, no name",
+      "why": "a function with no name",
+      "kind": "keyword"
+    },
+    {
+      "slang": "drop",
+      "python": "yield",
+      "meaning": "release (a new drop)",
+      "why": "drops values one at a time",
+      "kind": "keyword"
+    },
+    {
+      "slang": "blueprint",
+      "python": "class",
+      "meaning": "the original everyone copies",
+      "why": "objects are copies of the blueprint",
+      "kind": "keyword"
+    },
+    {
+      "slang": "shoot",
+      "python": "try",
+      "meaning": "shoot your shot",
+      "why": "take a shot at something risky",
+      "kind": "keyword"
+    },
+    {
+      "slang": "fumble",
+      "python": "except",
+      "meaning": "mess up a chance (fumble the bag)",
+      "why": "what runs when the code fumbles",
+      "kind": "keyword"
+    },
+    {
+      "slang": "periodt",
+      "python": "finally",
+      "meaning": "end of discussion, final word",
+      "why": "always gets the last word",
+      "kind": "keyword"
+    },
+    {
+      "slang": "yeet",
+      "python": "raise",
+      "meaning": "throw something hard",
+      "why": "yeet an error",
+      "kind": "keyword"
+    },
+    {
+      "slang": "ongod",
+      "python": "assert",
+      "meaning": "on god, I swear",
+      "why": "swear this is true or it fails",
+      "kind": "keyword"
+    },
+    {
+      "slang": "pullup",
+      "python": "import",
+      "meaning": "come over",
+      "why": "pull up a module",
+      "kind": "keyword"
+    },
+    {
+      "slang": "outta",
+      "python": "from",
+      "meaning": "out of",
+      "why": "outta math pullup sqrt",
+      "kind": "keyword"
+    },
+    {
+      "slang": "aka",
+      "python": "as",
+      "meaning": "also known as",
+      "why": "gives something another name",
+      "kind": "keyword"
+    },
+    {
+      "slang": "linkup",
+      "python": "with",
+      "meaning": "meet up",
+      "why": "link up with a resource, then part ways",
+      "kind": "keyword"
+    },
+    {
+      "slang": "cancel",
+      "python": "del",
+      "meaning": "cancel someone",
+      "why": "remove it",
+      "kind": "keyword"
+    },
+    {
+      "slang": "viral",
+      "python": "global",
+      "meaning": "known by everyone",
+      "why": "visible everywhere",
+      "kind": "keyword"
+    },
+    {
+      "slang": "mutuals",
+      "python": "nonlocal",
+      "meaning": "people who follow each other",
+      "why": "shared with the outer function",
+      "kind": "keyword"
+    },
+    {
+      "slang": "lowkey",
+      "python": "async",
+      "meaning": "quietly, in the background",
+      "why": "runs lowkey in the background",
+      "kind": "keyword"
+    },
+    {
+      "slang": "holdup",
+      "python": "await",
+      "meaning": "wait a minute",
+      "why": "hold up until it's done",
+      "kind": "keyword"
+    },
+    {
+      "slang": "spill",
+      "python": "match",
+      "meaning": "spill the tea, tell everything",
+      "why": "spill what's in the value",
+      "kind": "soft"
+    },
+    {
+      "slang": "pov",
+      "python": "case",
+      "meaning": "POV: a scenario",
+      "why": "each case is a POV scenario",
+      "kind": "soft"
+    },
+    {
+      "slang": "yap",
+      "python": "print",
+      "meaning": "talk a lot",
+      "why": "yap to the console",
+      "kind": "builtin"
+    },
+    {
+      "slang": "hmu",
+      "python": "input",
+      "meaning": "hit me up",
+      "why": "ask the user to hit you up with an answer",
+      "kind": "builtin"
+    },
+    {
+      "slang": "og",
+      "python": "super",
+      "meaning": "the original",
+      "why": "call the parent (OG) class",
+      "kind": "builtin"
+    },
+    {
+      "slang": "goat",
+      "python": "max",
+      "meaning": "greatest of all time",
+      "why": "the biggest item",
+      "kind": "builtin"
+    },
+    {
+      "slang": "flop",
+      "python": "min",
+      "meaning": "a fail, the worst one",
+      "why": "the smallest item",
+      "kind": "builtin"
+    },
+    {
+      "slang": "tierlist",
+      "python": "sorted",
+      "meaning": "ranking things best to worst",
+      "why": "rank everything",
+      "kind": "builtin"
+    },
+    {
+      "slang": "whoisyou",
+      "python": "type",
+      "meaning": "who even are you?",
+      "why": "asks a value what type it is",
+      "kind": "builtin"
+    },
+    {
+      "slang": "giving",
+      "python": "isinstance",
+      "meaning": "it's giving (resembles)",
+      "why": "giving(x, int) = it's giving int",
+      "kind": "builtin"
+    },
+    {
+      "slang": "skillissue",
+      "python": "Exception",
+      "meaning": "your own fault",
+      "why": "the base error type",
+      "kind": "builtin"
+    },
+    {
+      "slang": "touchgrass",
+      "python": "exit",
+      "meaning": "go outside, get offline",
+      "why": "quit the program",
+      "kind": "builtin"
+    },
+    {
+      "slang": "mee",
+      "python": "self",
+      "meaning": "me, myself",
+      "why": "the object talking about itself",
+      "kind": "builtin"
+    },
+    {
+      "slang": "howlongisit",
+      "python": "len",
+      "meaning": "how long is it?",
+      "why": "how many items something has",
+      "kind": "builtin"
+    },
+    {
+      "slang": "lowkeysus",
+      "python": "slaython.sus",
+      "meaning": "kinda suspicious",
+      "why": "prints an expression and its value",
+      "kind": "helper"
+    },
+    {
+      "slang": "bedrot",
+      "python": "time.sleep",
+      "meaning": "staying in bed doing nothing",
+      "why": "pause for some seconds",
+      "kind": "helper"
+    },
+    {
+      "slang": "headzortailz",
+      "python": "random coin flip",
+      "meaning": "heads or tails",
+      "why": "nocap or cap at random",
+      "kind": "helper"
+    },
+    {
+      "slang": "pickone",
+      "python": "random.choice",
+      "meaning": "just pick one",
+      "why": "a random item from a list",
+      "kind": "helper"
+    },
+    {
+      "slang": "runitfoo",
+      "python": "for _ in range(n)",
+      "meaning": "run it back",
+      "why": "runitfoo 3: repeats a block 3 times",
+      "kind": "syntax"
+    },
+    {
+      "slang": "deadass",
+      "python": "constant",
+      "meaning": "dead serious",
+      "why": "deadass X = 1 can never be reassigned",
+      "kind": "syntax"
+    },
+    {
+      "slang": "maincharacter",
+      "python": "if __name__ == \"__main__\"",
+      "meaning": "the main character",
+      "why": "runs only when the file is run directly",
+      "kind": "syntax"
+    },
+    {
+      "slang": "lore",
+      "python": "@dataclass class",
+      "meaning": "the backstory, just the facts",
+      "why": "a blueprint that only holds data",
+      "kind": "syntax"
+    },
+    {
+      "slang": "gang",
+      "python": "Enum class",
+      "meaning": "a fixed crew",
+      "why": "a fixed set of named values",
+      "kind": "syntax"
+    },
+    {
+      "slang": "speedrun",
+      "python": "timer block",
+      "meaning": "doing it as fast as possible",
+      "why": "times the block and prints how long it took",
+      "kind": "syntax"
+    },
+    {
+      "slang": "vibecheck",
+      "python": "inline test",
+      "meaning": "checking the vibe",
+      "why": "a test block that only slaython test runs",
+      "kind": "syntax"
+    },
+    {
+      "slang": "|>",
+      "python": "pipe: x |> f = f(x)",
+      "meaning": "pass it on",
+      "why": "feeds a value into the next function",
+      "kind": "operator"
+    }
+  ],
+  "kept": [
+    "and",
+    "in"
+  ]
+}

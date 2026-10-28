@@ -12,7 +12,7 @@
     },
     {
       "name": "string.quoted.triple.slaython",
-      "begin": "(?i)\\b[rbuf]{0,2}\"\"\"",
+      "begin": "(?i)(?:\\b[rbuf]{1,2})?\"\"\"",
       "end": "\"\"\"",
       "patterns": [
         {
@@ -23,7 +23,7 @@
     },
     {
       "name": "string.quoted.triple.slaython",
-      "begin": "(?i)\\b[rbuf]{0,2}'''",
+      "begin": "(?i)(?:\\b[rbuf]{1,2})?'''",
       "end": "'''",
       "patterns": [
         {
@@ -34,7 +34,7 @@
     },
     {
       "name": "string.quoted.double.slaython",
-      "begin": "(?i)\\b[rbuf]{0,2}\"",
+      "begin": "(?i)(?:\\b[rbuf]{1,2})?\"",
       "end": "\"|$",
       "patterns": [
         {
@@ -45,7 +45,7 @@
     },
     {
       "name": "string.quoted.single.slaython",
-      "begin": "(?i)\\b[rbuf]{0,2}'",
+      "begin": "(?i)(?:\\b[rbuf]{1,2})?'",
       "end": "'|$",
       "patterns": [
         {
@@ -55,7 +55,7 @@
       ]
     },
     {
-      "match": "\\b(cook)\\s+([A-Za-z_]\\w*)",
+      "match": "(?<!\\.)\\b(cook)\\s+([A-Za-z_]\\w*)",
       "captures": {
         "1": {
           "name": "storage.type.function.slaython"
@@ -66,7 +66,7 @@
       }
     },
     {
-      "match": "\\b(blueprint)\\s+([A-Za-z_]\\w*)",
+      "match": "(?<!\\.)\\b(blueprint)\\s+([A-Za-z_]\\w*)",
       "captures": {
         "1": {
           "name": "storage.type.class.slaython"
@@ -77,28 +77,65 @@
       }
     },
     {
+      "match": "(?<!\\.)\\b(lore)\\s+([A-Za-z_]\\w*)",
+      "captures": {
+        "1": {
+          "name": "storage.type.class.slaython"
+        },
+        "2": {
+          "name": "entity.name.type.class.slaython"
+        }
+      }
+    },
+    {
+      "match": "(?<!\\.)\\b(gang)\\s+([A-Za-z_]\\w*)",
+      "captures": {
+        "1": {
+          "name": "storage.type.class.slaython"
+        },
+        "2": {
+          "name": "entity.name.type.class.slaython"
+        }
+      }
+    },
+    {
+      "match": "(?<!\\.)\\b(deadass)\\s+([A-Za-z_]\\w*)",
+      "captures": {
+        "1": {
+          "name": "keyword.control.slaython"
+        },
+        "2": {
+          "name": "variable.other.constant.slaython"
+        }
+      }
+    },
+    {
       "name": "constant.language.slaython",
-      "match": "(?<!\\.)\\b(ghosted|nocap|cap)\\b"
+      "match": "(?<!\\.)\\b(ghosted|nocap|cap)\\b(?!\\s*=(?!=))"
     },
     {
       "name": "keyword.control.slaython",
-      "match": "(?<!\\.)\\b(doomscroll|ornah\\s+fr|lockedin|runitfoo|anyways|periodt|mutuals|deadass|fumble|pullup|linkup|cancel|holdup|ornah|chill|serve|shoot|ongod|outta|viral|spill|drop|yeet|dip|aka|pov|fr)\\b"
+      "match": "(?<!\\.)\\b(maincharacter|doomscroll|vibecheck|ornah\\s+fr|lockedin|runitfoo|speedrun|anyways|periodt|mutuals|deadass|fumble|pullup|linkup|cancel|holdup|ornah|chill|serve|shoot|ongod|outta|viral|spill|drop|yeet|lore|gang|dip|aka|pov|fr)\\b(?!\\s*=(?!=))"
     },
     {
       "name": "keyword.operator.logical.slaython",
-      "match": "(?<!\\.)\\b(literally|orr|nah)\\b"
+      "match": "(?<!\\.)\\b(literally|orr|nah)\\b(?!\\s*=(?!=))"
     },
     {
       "name": "storage.type.slaython",
-      "match": "(?<!\\.)\\b(blueprint|nohead|lowkey|cook)\\b"
+      "match": "(?<!\\.)\\b(blueprint|nohead|lowkey|cook)\\b(?!\\s*=(?!=))"
     },
     {
       "name": "support.function.builtin.slaython",
-      "match": "(?<!\\.)\\b(skillissue|touchgrass|lowkeysus|tierlist|whoisyou|giving|bedrot|goat|flop|yap|hmu|og)\\b"
+      "match": "(?<!\\.)\\b(headzortailz|howlongisit|skillissue|touchgrass|lowkeysus|tierlist|whoisyou|pickone|giving|bedrot|goat|flop|yap|hmu|og)\\b(?!\\s*=(?!=))"
     },
     {
       "name": "variable.language.self.slaython",
-      "match": "(?<!\\.)\\b(mee)\\b"
+      "match": "(?<!\\.)\\b(mee)\\b(?!\\s*=(?!=))"
+    },
+    {
+      "name": "keyword.operator.pipe.slaython",
+      "match": "(\\|>)"
     },
     {
       "name": "constant.numeric.slaython",

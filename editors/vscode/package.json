@@ -1,14 +1,46 @@
 {
   "name": "slaython",
   "displayName": "Slaython",
-  "description": "Syntax highlighting for Slaython (.slay), Python with gen-z slang keywords",
+  "description": "Slaython (.slay) support: Python with gen-z slang keywords. Highlighting, hovers, snippets and run commands.",
   "version": "0.2.0",
+  "publisher": "memoliertorerr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/memoliertorerr/Slaython"
+  },
+  "homepage": "https://github.com/memoliertorerr/Slaython#readme",
+  "bugs": {
+    "url": "https://github.com/memoliertorerr/Slaython/issues"
+  },
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Snippets"
   ],
+  "keywords": [
+    "slaython",
+    "slay",
+    "python",
+    "slang",
+    "gen-z",
+    "transpiler",
+    "esolang"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:slaython"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "slaython.command is only read from user settings in untrusted workspaces.",
+      "restrictedConfigurations": [
+        "slaython.command"
+      ]
+    }
+  },
   "contributes": {
     "languages": [
       {
@@ -29,6 +61,67 @@
         "scopeName": "source.slaython",
         "path": "./syntaxes/slaython.tmLanguage.json"
       }
-    ]
+    ],
+    "snippets": [
+      {
+        "language": "slaython",
+        "path": "./snippets/slaython.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "slaython.runFile",
+        "title": "Run File",
+        "category": "Slaython",
+        "icon": "$(play)"
+      },
+      {
+        "command": "slaython.showPython",
+        "title": "Show Python",
+        "category": "Slaython",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "slaython.runTests",
+        "title": "Run Tests",
+        "category": "Slaython",
+        "icon": "$(beaker)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "slaython.runFile",
+          "when": "editorLangId == slaython",
+          "group": "navigation"
+        },
+        {
+          "command": "slaython.showPython",
+          "when": "editorLangId == slaython",
+          "group": "1_slaython"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "slaython.runFile",
+          "when": "editorLangId == slaython"
+        },
+        {
+          "command": "slaython.showPython",
+          "when": "editorLangId == slaython"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Slaython",
+      "properties": {
+        "slaython.command": {
+          "type": "string",
+          "default": "slaython",
+          "scope": "machine-overridable",
+          "markdownDescription": "Command that runs Slaython, for example `slaython` or `python -m slaython`. Split on spaces; quote parts that contain spaces."
+        }
+      }
+    }
   }
 }

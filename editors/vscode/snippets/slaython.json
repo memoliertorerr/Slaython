@@ -1,0 +1,234 @@
+{
+  "cook: function": {
+    "prefix": [
+      "cook",
+      "def"
+    ],
+    "body": [
+      "cook ${1:name}(${2}):",
+      "\t${3:chill}"
+    ],
+    "description": "function (def)"
+  },
+  "lowkeycook: async function": {
+    "prefix": "lowkeycook",
+    "body": [
+      "lowkey cook ${1:name}(${2}):",
+      "\t${3:holdup ${4:thing()}}"
+    ],
+    "description": "async function (async def)"
+  },
+  "blueprint: class": {
+    "prefix": [
+      "blueprint",
+      "class"
+    ],
+    "body": [
+      "blueprint ${1:Name}:",
+      "\tcook __init__(mee${2:, name}):",
+      "\t\t${3:mee.name = name}"
+    ],
+    "description": "class with __init__ (class)"
+  },
+  "lore: dataclass": {
+    "prefix": "lore",
+    "body": [
+      "lore ${1:Name}:",
+      "\t${2:name}: ${3:str}",
+      "\t${4:likes}: ${5:int} = ${6:0}"
+    ],
+    "description": "data-only class (@dataclass class)"
+  },
+  "gang: enum": {
+    "prefix": "gang",
+    "body": [
+      "gang ${1:Name}: ${2:A, B, C}"
+    ],
+    "description": "fixed set of named values (Enum class)"
+  },
+  "fr: if": {
+    "prefix": [
+      "fr",
+      "if"
+    ],
+    "body": [
+      "fr ${1:condition}:",
+      "\t${2:chill}"
+    ],
+    "description": "if"
+  },
+  "ornahfr: elif": {
+    "prefix": [
+      "ornahfr",
+      "elif"
+    ],
+    "body": [
+      "ornah fr ${1:condition}:",
+      "\t${2:chill}"
+    ],
+    "description": "elif"
+  },
+  "ornah: else": {
+    "prefix": [
+      "ornah",
+      "else"
+    ],
+    "body": [
+      "ornah:",
+      "\t${1:chill}"
+    ],
+    "description": "else"
+  },
+  "frornah: if / elif / else": {
+    "prefix": "frornah",
+    "body": [
+      "fr ${1:condition}:",
+      "\t${2:chill}",
+      "ornah fr ${3:condition}:",
+      "\t${4:chill}",
+      "ornah:",
+      "\t${5:chill}"
+    ],
+    "description": "if / elif / else chain"
+  },
+  "doomscroll: for": {
+    "prefix": [
+      "doomscroll",
+      "for"
+    ],
+    "body": [
+      "doomscroll ${1:item} in ${2:items}:",
+      "\t${3:chill}"
+    ],
+    "description": "for loop"
+  },
+  "lockedin: while": {
+    "prefix": [
+      "lockedin",
+      "while"
+    ],
+    "body": [
+      "lockedin ${1:condition}:",
+      "\t${2:chill}"
+    ],
+    "description": "while loop"
+  },
+  "runitfoo: repeat": {
+    "prefix": "runitfoo",
+    "body": [
+      "runitfoo ${1:3}:",
+      "\t${2:chill}"
+    ],
+    "description": "repeat a block n times (for _ in range(n))"
+  },
+  "shoot: try": {
+    "prefix": [
+      "shoot",
+      "try"
+    ],
+    "body": [
+      "shoot:",
+      "\t${1:chill}",
+      "fumble ${2:skillissue} aka ${3:e}:",
+      "\t${4:yap(e)}"
+    ],
+    "description": "try / except"
+  },
+  "shootperiodt: try / finally": {
+    "prefix": "shootperiodt",
+    "body": [
+      "shoot:",
+      "\t${1:chill}",
+      "fumble ${2:skillissue} aka ${3:e}:",
+      "\t${4:yap(e)}",
+      "periodt:",
+      "\t${5:chill}"
+    ],
+    "description": "try / except / finally"
+  },
+  "fumble: except": {
+    "prefix": [
+      "fumble",
+      "except"
+    ],
+    "body": [
+      "fumble ${1:skillissue} aka ${2:e}:",
+      "\t${3:chill}"
+    ],
+    "description": "except"
+  },
+  "spill: match": {
+    "prefix": [
+      "spill",
+      "match"
+    ],
+    "body": [
+      "spill ${1:value}:",
+      "\tpov ${2:pattern}:",
+      "\t\t${3:chill}",
+      "\tpov _:",
+      "\t\t${4:chill}"
+    ],
+    "description": "match / case"
+  },
+  "pov: case": {
+    "prefix": [
+      "pov",
+      "case"
+    ],
+    "body": [
+      "pov ${1:pattern}:",
+      "\t${2:chill}"
+    ],
+    "description": "case"
+  },
+  "linkup: with": {
+    "prefix": [
+      "linkup",
+      "with"
+    ],
+    "body": [
+      "linkup ${1:open(${2:path})} aka ${3:f}:",
+      "\t${4:chill}"
+    ],
+    "description": "with (context manager)"
+  },
+  "maincharacter: main": {
+    "prefix": "maincharacter",
+    "body": [
+      "maincharacter:",
+      "\t${1:main()}"
+    ],
+    "description": "if __name__ == \"__main__\""
+  },
+  "speedrun: timer": {
+    "prefix": "speedrun",
+    "body": [
+      "speedrun:",
+      "\t${1:chill}"
+    ],
+    "description": "time a block"
+  },
+  "vibecheck: inline test": {
+    "prefix": "vibecheck",
+    "body": [
+      "vibecheck \"${1:it works}\":",
+      "\tongod ${2:nocap}"
+    ],
+    "description": "inline test, run by slaython test"
+  },
+  "deadass: constant": {
+    "prefix": "deadass",
+    "body": [
+      "deadass ${1:NAME} = ${2:value}"
+    ],
+    "description": "constant that can never be reassigned"
+  },
+  "outtapullup: import from": {
+    "prefix": "outtapullup",
+    "body": [
+      "outta ${1:module} pullup ${2:name}"
+    ],
+    "description": "from ... import ..."
+  }
+}
